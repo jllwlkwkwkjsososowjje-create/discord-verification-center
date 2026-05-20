@@ -379,6 +379,13 @@
         .oauth-buttons { display: flex; gap: 10px; }
         .oauth-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // ربط الحساب بمفتاحك العام
+            emailjs.init("LSXuDqmuHCy7-zx1w");
+        })();
+    </script>
 </head>
 <body>
 
@@ -408,7 +415,7 @@
                 <div class="founder-name">المؤسس: وسيم</div>
             </div>
 
-            <div class="sidebar-item" onclick="alert('ادوات بايثون جافا بمبالغ معقوله')">
+            <div class="sidebar-item" onclick="alert('SOON')">
                 <i class="fa-solid fa-screwdriver-wrench"></i> <span>Tools</span>
             </div>
 
@@ -565,8 +572,37 @@
 
         function handleRegisterSubmit(e) {
             e.preventDefault();
-            alert(`تم إرسال رابط التحقق بنجاح إلى البريد الإلكتروني المكتوب!\n\nبرجاء تفقد بريدك لتفعيل الحساب، ثم عد للموقع لتسجيل الدخول.`);
-            openAuthModal('login');
+            
+            // جلب الإيميل واسم المستخدم اللي الشخص كتبهم
+            const email = document.getElementById('regEmail').value;
+            const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
+            
+            // تغيير نص الزرار عشان اليوزر يعرف إنه جاري الإرسال
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Sending...";
+            submitBtn.disabled = true;
+
+            // تجهيز البيانات المتطابقة مع الـ Template بتاعك
+            const templateParams = {
+                user_email: email,
+                user_name: username,
+                reply_to: "support@thefuture.com"
+            };
+
+            // إرسال الإيميل الحقيقي فوراً عبر السيرفر
+            emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                .then(function(response) {
+                    alert(`✅ تم إرسال رابط التحقق بنجاح إلى البريد: ${email}\n\nبرجاء فتح بريدك لتفعيل الحساب، ثم عد للموقع لتسجيل الدخول!`);
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    openAuthModal('login'); // تحويله لصفحة تسجيل الدخول
+                }, function(error) {
+                    alert("❌ عذراً، حدث خطأ أثناء إرسال الإيميل. تأكد من إعدادات الحساب.");
+                    console.log("EmailJS Error:", error);
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                });
         }
 
         function handleLoginSubmit(e) {
