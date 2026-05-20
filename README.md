@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Future | Welcome</title>
+    <title>Host The Future | Welcome</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* إعدادات المتصفح الأساسية ودعم التجاوب مع الشاشات */
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +13,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* خلفية الفضاء اللامعة المليئة بالنجوم والمتحركة */
+        /* خلفية فضاء حقيقية بنجوم متحركة وسديم بنفسجي لامع وخفيف */
         body {
-            background: radial-gradient(circle at center, #080711 0%, #030206 100%);
+            background: radial-gradient(circle at 30% 20%, #120924 0%, #040308 60%), 
+                        radial-gradient(circle at 80% 70%, #180b30 0%, #030206 100%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -25,143 +25,84 @@
             position: relative;
         }
 
-        /* تأثير النجوم المتلألئة في الخلفية */
+        /* تأثير النجوم المتلألئة المضيئة */
         body::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
+                radial-gradient(white, rgba(255,255,255,.2) 1.5px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 20px);
+            background-size: 350px 350px, 250px 250px;
             opacity: 0.4;
             z-index: 0;
-            animation: starsMove 100s linear infinite;
+            animation: starsMove 120s linear infinite;
         }
 
         @keyframes starsMove {
-            from { background-position: 0 0, 40px 60px, 130px 270px; }
-            to { background-position: 550px 1100px, 390px 760px, 1130px 1270px; }
+            from { background-position: 0 0, 40px 60px; }
+            to { background-position: 350px 700px, 290px 460px; }
         }
 
-        /* تصميم الوردة السوداء الفضائية */
-        .space-black-rose {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            background: #030206;
-            border-radius: 50%;
-            box-shadow: 0 0 25px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        /* بتلات الوردة السوداء الهندسة */
-        .petal {
-            position: absolute;
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #0b0911 0%, #020104 100%);
-            border-radius: 50% 0 50% 0;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-        .p1 { transform: rotate(0deg); }
-        .p2 { transform: rotate(45deg); }
-        .p3 { transform: rotate(90deg); }
-        .p4 { transform: rotate(135deg); }
-
-        .center-core {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #000;
-            border-radius: 50%;
-            z-index: 5;
-            box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
-        }
-
-        /* نجوم المجرة العشوائية المتحركة جوه الوردة */
-        .rose-star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 5px #fff;
-            z-index: 6;
-            animation: roseStarBlink 2s infinite ease-in-out;
-        }
-        .rs1 { width: 2px; height: 2px; top: 25px; left: 30px; animation-delay: 0.2s; }
-        .rs2 { width: 3px; height: 3px; top: 50px; left: 45px; animation-delay: 0.7s; }
-        .rs3 { width: 2px; height: 2px; top: 35px; left: 55px; animation-delay: 1.3s; }
-
-        @keyframes roseStarBlink {
-            0%, 100% { opacity: 0.1; transform: scale(0.8) translate(0, 0); }
-            50% { opacity: 1; transform: scale(1.2) translate(3px, -2px); }
-        }
-
-        /* تنسيق شريط التنقل العلوي */
+        /* شريط التنقل العلوي */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            background: rgba(5, 5, 10, 0.75);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 5%;
+            background: rgba(4, 3, 8, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             z-index: 10;
-            position: relative;
         }
 
         .nav-logo {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #00bcd4;
-            text-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+            text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
             text-decoration: none;
         }
 
         .menu-toggle {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #ffffff;
             cursor: pointer;
             transition: 0.3s;
+            padding: 5px;
         }
-        .menu-toggle:hover { color: #00bcd4; }
 
-        /* ستايل القائمة الجانبية (Sidebar) بأنيميشن متجاوب */
+        /* القائمة الجانبية المرنة (تتطابق مع لغة الموقع وتمنع التعليق) */
         .sidebar {
             position: fixed;
             top: 0;
-            right: -300px; /* مخفية بره الشاشة */
             width: 280px;
             height: 100%;
-            background: #07070c;
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            background: #050408;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
             z-index: 999;
-            padding: 30px 20px;
-            transition: right 0.4s cubic-bezier(0.1, 1, 0.1, 1); /* أنيميشن ناعم جداً */
+            padding: 25px 20px;
+            transition: transform 0.4s cubic-bezier(0.1, 1, 0.1, 1);
         }
 
-        .sidebar.active {
-            right: 0; /* تفتح للداخل */
-        }
+        /* التحكم في اتجاه فتح القائمة حسب اللغة */
+        html[dir="ltr"] .sidebar { right: 0; transform: translateX(300px); border-left: 1px solid rgba(255, 255, 255, 0.05); }
+        html[dir="rtl"] .sidebar { left: 0; transform: translateX(-300px); border-right: 1px solid rgba(255, 255, 255, 0.05); }
+        
+        html[dir="ltr"] .sidebar.active { transform: translateX(0); }
+        html[dir="rtl"] .sidebar.active { transform: translateX(0); }
 
         .sidebar-close {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #64748b;
             cursor: pointer;
-            text-align: left;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-        .sidebar-close:hover { color: #ff3b3b; }
+        html[dir="ltr"] .sidebar-close { text-align: left; }
+        html[dir="rtl"] .sidebar-close { text-align: right; }
 
         .sidebar-item {
-            padding: 15px 10px;
+            padding: 12px 10px;
             color: #94a3b8;
             font-weight: 600;
             cursor: pointer;
@@ -169,36 +110,33 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: 0.3s;
-            flex-direction: row;
-            flex-wrap: wrap;
         }
-        .sidebar-item:hover { background: rgba(255,255,255,0.02); color: #fff; }
+        .sidebar-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
 
-        /* قائمة المطورين المنسدلة داخل الـ Sidebar */
         .sidebar-dropdown {
             width: 100%;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
+            padding: 12px;
+            margin-top: 8px;
             display: none;
-            text-align: right;
-            direction: rtl;
         }
+        html[dir="ltr"] .sidebar-dropdown { text-align: left; direction: ltr; }
+        html[dir="rtl"] .sidebar-dropdown { text-align: right; direction: rtl; }
 
-        .dropdown-title { color: #00bcd4; font-weight: bold; font-size: 0.95rem; }
-        .dropdown-subtitle { font-size: 0.75rem; color: #64748b; margin-bottom: 10px; }
-        .founder-name { color: #ff3b3b; text-shadow: 0 0 8px rgba(255, 59, 59, 0.3); margin: 6px 0; font-size: 0.85rem; }
+        .dropdown-title { color: #00bcd4; font-weight: bold; font-size: 0.9rem; }
+        .dropdown-subtitle { font-size: 0.75rem; color: #64748b; margin-bottom: 8px; }
+        .founder-name { color: #ff3b3b; text-shadow: 0 0 8px rgba(255, 59, 59, 0.3); margin: 4px 0; font-size: 0.85rem; }
 
-        /* أزرار اللغات الجديدة (جنب بعض) */
+        /* أزرار اللغات جنب بعضها */
         .lang-section {
-            margin-top: 40px;
+            margin-top: 30px;
             display: flex;
             gap: 10px;
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 25px;
+            padding-top: 20px;
         }
 
         .lang-btn-box {
@@ -211,36 +149,68 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: bold;
+            text-align: center;
             transition: 0.3s;
         }
-        .lang-btn-box:hover, .lang-btn-box.active {
+        .lang-btn-box.active {
             background: #00bcd4;
             color: #000;
             border-color: #00bcd4;
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
         }
 
-        /* النظام الشمسي الذي يدور حول الوردة */
+        /* كرت المحتوى الرئيسي متناسق الحجم */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 5;
+        }
+
+        .main-card {
+            background: rgba(8, 7, 12, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
+        }
+
+        /* تم تصغير منطقة الوردة والنظام الشمسي لتناسب الهواتف تماماً */
+        .universe-zone {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .solar-orbit {
             position: absolute;
             width: 100%;
             height: 100%;
-            border: 1px dashed rgba(0, 188, 212, 0.3);
+            border: 1px dashed rgba(0, 188, 212, 0.25);
             border-radius: 50%;
-            animation: orbitSpin 12s linear infinite;
+            animation: orbitSpin 15s linear infinite;
         }
 
-        /* الكوكب الذي يدور في النظام */
         .solar-orbit::after {
             content: '';
             position: absolute;
-            top: 10px;
+            top: 5px;
             left: 50%;
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: #00bcd4;
             border-radius: 50%;
-            box-shadow: 0 0 10px #00bcd4;
+            box-shadow: 0 0 8px #00bcd4;
         }
 
         @keyframes orbitSpin {
@@ -248,124 +218,106 @@
             to { transform: rotate(360deg); }
         }
 
-        /* الوردة السوداء الفضائية ذات النقاط والنجوم اللامعة في قلب النظام */
-        .black-rose-icon {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #1a1525 0%, #050408 100%);
+        /* الوردة الفضائية المصغرة والمحاطة بالنجوم الداخلية */
+        .space-black-rose {
+            position: relative;
+            width: 65px;
+            height: 65px;
+            background: #020104;
             border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.5rem;
-            color: #111;
-            border: 2px solid rgba(255,255,255,0.05);
-            text-shadow: 0 0 5px rgba(255,255,255,0.1);
-            position: relative;
-            box-shadow: 0 0 25px rgba(0,0,0,0.9);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.03);
         }
 
-        /* بريق متلألئ خفيف داخل الوردة */
-        .black-rose-icon::before {
-            content: '✨';
+        .petal {
             position: absolute;
-            font-size: 0.8rem;
-            top: 15px;
-            right: 15px;
-            animation: pulse 2s infinite alternate;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #09070f 0%, #010003 100%);
+            border-radius: 50% 0 50% 0;
+            border: 1px solid rgba(255, 255, 255, 0.01);
+        }
+        .p1 { transform: rotate(0deg); }
+        .p2 { transform: rotate(45deg); }
+        .p3 { transform: rotate(90deg); }
+        .p4 { transform: rotate(135deg); }
+
+        .center-core {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #000;
+            border-radius: 50%;
+            z-index: 5;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
+        .rose-star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 4px #fff;
+            z-index: 6;
+            animation: roseStarBlink 2s infinite ease-in-out;
+        }
+        .rs1 { width: 2px; height: 2px; top: 18px; left: 22px; animation-delay: 0.2s; }
+        .rs2 { width: 2px; height: 2px; top: 42px; left: 38px; animation-delay: 0.7s; }
+        .rs3 { width: 1.5px; height: 1.5px; top: 28px; left: 45px; animation-delay: 1.3s; }
+
+        @keyframes roseStarBlink {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* قسم الإحصائيات (السيرفرات والسبورت) */
+        /* صندوق الإحصائيات المعدل */
         .stats-container {
             display: flex;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 14px;
-            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
-        .stat-box {
-            flex: 1;
-            text-align: center;
-        }
+        .stat-box { flex: 1; text-align: center; }
+        html[dir="ltr"] .stat-box:first-child { border-right: 1px solid rgba(255,255,255,0.04); }
+        html[dir="rtl"] .stat-box:first-child { border-left: 1px solid rgba(255,255,255,0.04); }
 
-        .stat-box:first-child {
-            border-right: 1px solid rgba(255,255,255,0.05);
-        }
+        .stat-num { font-size: 1.2rem; font-weight: 800; color: #34d399; }
+        .stat-label { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
 
-        .stat-num {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #34d399;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 2px;
-            text-transform: uppercase;
-        }
-
-        /* أزرار العمليات الأساسية */
+        /* الأزرار */
         .action-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 1.05rem;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
             transition: 0.3s;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: none;
         }
 
-        .btn-start {
-            background: #00bcd4;
-            color: #000;
-            box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3);
-        }
+        .btn-start { background: #00bcd4; color: #000; box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2); }
+        .btn-start:hover { background: #00e5ff; transform: translateY(-1px); }
+        .btn-discord { background: #5865F2; color: #fff; }
+        .btn-discord:hover { background: #4752c4; transform: translateY(-1px); }
 
-        .btn-start:hover {
-            background: #00e5ff;
-            transform: translateY(-2px);
-        }
-
-        /* زر الديسكورد - تعديل الرابط هنا سهل جداً */
-        .btn-discord {
-            background: #5865F2;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.2);
-        }
-
-        .btn-discord:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-        }
-
-        /* تعديل للمنطقة التجريبية والمحاكاة المنظرية التي طلبتها */
-        .custom-text-zone {
-            margin: 15px 0;
-            font-size: 0.85rem;
-            color: #4b5563;
-        }
-
-        /* شاشات التسجيل والـ Modals التفاعلية */
+        /* النوافذ المنبثقة (Auth Modals) */
         .auth-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 2, 6, 0.95);
+            background: rgba(3, 2, 6, 0.94);
             z-index: 1000;
             display: flex;
             justify-content: center;
@@ -375,138 +327,63 @@
             transition: 0.3s ease;
         }
 
-        .auth-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .auth-overlay.active { opacity: 1; pointer-events: auto; }
 
         .auth-modal {
-            background: #08080d;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 35px;
-            max-width: 440px;
+            background: #06050a;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 400px;
             width: 90%;
             position: relative;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 1.3rem;
-            color: #64748b;
-            cursor: pointer;
-        }
+        .close-btn { position: absolute; top: 12px; right: 18px; font-size: 1.2rem; color: #64748b; cursor: pointer; }
+        .auth-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; text-align: center; color: #00bcd4; }
 
-        .auth-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            text-align: center;
-            color: #00bcd4;
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 6px;
-        }
-
+        .input-group { margin-bottom: 15px; text-align: left; }
+        html[dir="rtl"] .input-group { text-align: right; }
+        .input-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px; }
+        
         .input-group input {
             width: 100%;
-            padding: 12px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            color: white;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .input-group input:focus { border-color: #00bcd4; }
-
-        /* أداة الكابتشا (أنا لست روبوت محاكاة) */
-        .captcha-box {
+            padding: 10px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.08);
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            border-radius: 6px;
+            color: white;
+            outline: none;
         }
+        .input-group input:focus { border-color: #00bcd4; }
 
-        .captcha-box input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .switch-auth-mode {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        .switch-auth-mode span {
-            color: #00bcd4;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .oauth-divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #4b5563;
-            margin: 20px 0;
-            font-size: 0.8rem;
-        }
-        .oauth-divider::before, .oauth-divider::after {
-            content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .oauth-divider:not(:empty)::before { margin-right: .25em; }
-        .oauth-divider:not(:empty)::after { margin-left: .25em; }
-
-        .oauth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .oauth-btn {
-            flex: 1;
+        .captcha-box {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.06);
             padding: 10px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: inline-flex;
+            border-radius: 6px;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        /* توافق تام مع الموبايل */
-        @media (max-width: 768px) {
-            nav { padding: 15px 20px; }
-            .nav-links { gap: 15px; }
-            .main-card { padding: 25px 20px; }
-        }
+        .switch-auth-mode { text-align: center; margin-top: 12px; font-size: 0.8rem; color: #64748b; }
+        .switch-auth-mode span { color: #00bcd4; cursor: pointer; font-weight: bold; }
+        
+        .oauth-divider { display: flex; align-items: center; text-align: center; color: #4b5563; margin: 15px 0; font-size: 0.75rem; }
+        .oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        html[dir="ltr"] .oauth-divider::before { margin-right: .5em; } html[dir="ltr"] .oauth-divider::after { margin-left: .5em; }
+        html[dir="rtl"] .oauth-divider::before { margin-left: .5em; } html[dir="rtl"] .oauth-divider::after { margin-right: .5em; }
+
+        .oauth-buttons { display: flex; gap: 10px; }
+        .oauth-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="#" class="nav-logo">Host The Future</a>
-        
         <div class="menu-toggle" onclick="toggleSidebar(true)">
             <i class="fa-solid fa-bars"></i>
         </div>
@@ -519,73 +396,65 @@
 
         <div class="sidebar-content">
             <div class="sidebar-item" onclick="toggleDevelopers()">
-                <i class="fa-solid fa-code"></i> Developers <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: auto;"></i>
-                <div class="sidebar-dropdown" id="devDropdown">
-                    <div class="dropdown-title">مؤسسين (The Future)</div>
-                    <div class="dropdown-subtitle">(المؤسسين من أصول عربيه)</div>
-                    <div class="founder-name">المؤسس: مالك</div>
-                    <div class="founder-name">المؤسس: وسيم</div>
-                </div>
+                <i class="fa-solid fa-code"></i> 
+                <span>Developers</span> 
+                <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: auto; margin-right: auto;"></i>
+            </div>
+            
+            <div class="sidebar-dropdown" id="devDropdown">
+                <div class="dropdown-title">مؤسسين (The Future)</div>
+                <div class="dropdown-subtitle">(المؤسسين من أصول عربيه)</div>
+                <div class="founder-name">المؤسس: مالك</div>
+                <div class="founder-name">المؤسس: وسيم</div>
             </div>
 
             <div class="sidebar-item" onclick="alert('ادوات بايثون جافا بمبالغ معقوله')">
-                <i class="fa-solid fa-screwdriver-wrench"></i> Tools
+                <i class="fa-solid fa-screwdriver-wrench"></i> <span>Tools</span>
             </div>
 
             <div class="lang-section">
-                <button class="lang-btn-box active" onclick="changeLang('en', this)">🇺🇸 English</button>
-                <button class="lang-btn-box" onclick="changeLang('ar', this)">عربيه 🇸🇦</button>
+                <button class="lang-btn-box" id="enBtn" onclick="setLanguage('en')">🇺🇸 English</button>
+                <button class="lang-btn-box" id="arBtn" onclick="setLanguage('ar')">عربيه 🇸🇦</button>
             </div>
         </div>
     </div>
 
     <div class="main-wrapper">
         <div class="main-card">
-            
             <div class="universe-zone">
                 <div class="solar-orbit"></div>
                 <div class="space-black-rose">
-                    <div class="petal p1"></div>
-                    <div class="petal p2"></div>
-                    <div class="petal p3"></div>
-                    <div class="petal p4"></div>
+                    <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div>
                     <div class="center-core"></div>
-                    <div class="rose-star rs1"></div>
-                    <div class="rose-star rs2"></div>
-                    <div class="rose-star rs3"></div>
+                    <div class="rose-star rs1"></div><div class="rose-star rs2"></div><div class="rose-star rs3"></div>
                 </div>
             </div>
 
-            <h2 style="color: #fff; margin-bottom: 10px; font-weight: 800;">Cloud Infrastructure</h2>
-            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Deploy high performance environments instantly in the cloud network.</p>
+            <h2 id="cardTitle" style="color: #fff; margin-bottom: 8px; font-weight: 800;">Cloud Infrastructure</h2>
+            <p id="cardDesc" style="color: #64748b; font-size: 0.85rem; margin-bottom: 20px;">Deploy high performance environments instantly in the cloud network.</p>
 
             <div class="stats-container">
                 <div class="stat-box">
                     <div class="stat-num">Free</div>
-                    <div class="stat-label">Server</div>
+                    <div class="stat-label" id="lblServer">Server</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-num">24/7</div>
-                    <div class="stat-label">Sport</div>
+                    <div class="stat-label" id="lblSport">Sport</div>
                 </div>
             </div>
 
-            <div class="custom-text-zone">
-                </div>
-
-            <button class="action-btn btn-start" onclick="openAuthModal('login')">
-                <i class="fa-solid : fa-bolt"></i> Start
+            <button class="action-btn btn-start" id="btnStartText" onclick="openAuthModal('login')">
+                <i class="fa-solid fa-bolt"></i> Start
             </button>
 
-            <a href="https://discord.gg/YCXRJRztRb" target="_blank" class="action-btn btn-discord">
-                <i class="fa-brands : fa-discord"></i> Join Discord
+            <a href="https://discord.gg/YCXRJRztRb" target="_blank" class="action-btn btn-discord" id="btnDiscordText">
+                <i class="fa-brands fa-discord"></i> Join Discord
             </a>
-
         </div>
     </div>
 
     <div class="auth-overlay" id="authOverlay">
-        
         <div class="auth-modal" id="loginModal">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div class="auth-title">Login</div>
@@ -598,22 +467,18 @@
                     <label>Password</label>
                     <input type="password" required placeholder="••••••••">
                 </div>
-
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheck" required>
-                    <label for="captchaCheck" style="font-size: 0.85rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
-                    <i class="fa-solid : fa-shield-halved" style="color: #34d399; margin-left: auto;"></i>
+                    <label for="captchaCheck" style="font-size: 0.8rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
+                    <i class="fa-solid fa-shield-halved" style="color: #34d399; margin-left: auto;"></i>
                 </div>
-
                 <button type="submit" class="action-btn btn-start" style="margin-bottom:0;">Login</button>
             </form>
-
             <div class="oauth-divider">Or Sign In With</div>
             <div class="oauth-buttons">
-                <button class="oauth-btn" style="background:#fff; color:#000;" onclick="alert('جاري الاتصال بـ Google...')"><i class="fa-brands : fa-google"></i> Google</button>
-                <button class="oauth-btn" style="background:#5865F2; color:#fff;" onclick="alert('جاري الاتصال بـ Discord...')"><i class="fa-brands : fa-discord"></i> Discord</button>
+                <button class="oauth-btn" style="background:#fff; color:#000;" onclick="alert('Connecting to Google...')"><i class="fa-brands fa-google"></i> Google</button>
+                <button class="oauth-btn" style="background:#5865F2; color:#fff;" onclick="alert('Connecting to Discord...')"><i class="fa-brands fa-discord"></i> Discord</button>
             </div>
-
             <div class="switch-auth-mode">Don't have an account? <span onclick="openAuthModal('register')">New account</span></div>
         </div>
 
@@ -623,7 +488,7 @@
             <form onsubmit="handleRegisterSubmit(event)">
                 <div class="input-group">
                     <label>Username</label>
-                    <input type="text" id="regUser" required placeholder="e.g. enzo_dev">
+                    <input type="text" required placeholder="e.g. enzo_dev">
                 </div>
                 <div class="input-group">
                     <label>Email Address</label>
@@ -637,85 +502,77 @@
                     <label>Confirm Password</label>
                     <input type="password" required placeholder="••••••••">
                 </div>
-
-                <button type="submit" class="action-btn btn-start" style="margin-bottom:0; background:#34d399; color:#000; box-shadow: 0 4px 20px rgba(52, 211, 153, 0.2);">Verify Email</button>
+                <button type="submit" class="action-btn btn-start" style="margin-bottom:0; background:#34d399; color:#000;">Verify Email</button>
             </form>
             <div class="switch-auth-mode">Already have an account? <span onclick="openAuthModal('login')">Login</span></div>
         </div>
-
     </div>
 
     <script>
-        const overlay = document.getElementById('authOverlay');
-        const loginModal = document.getElementById('loginModal');
-        const registerModal = document.getElementById('registerModal');
+        // حفظ واسترجاع اللغة المفضلة من ذاكرة المتصفح لمنع التعليق
+        const savedLang = localStorage.getItem('siteLang') || 'en';
+        applyLanguageStyles(savedLang);
 
-        // فتح نوافذ الحسابات
-        function openAuthModal(mode) {
-            overlay.classList.add('active');
-            if(mode === 'login') {
-                loginModal.style.display = 'block';
-                registerModal.style.display = 'none';
+        function applyLanguageStyles(lang) {
+            document.documentElement.lang = lang;
+            if (lang === 'ar') {
+                document.documentElement.dir = 'rtl';
+                document.getElementById('arBtn').classList.add('active');
+                document.getElementById('enBtn').classList.remove('active');
+                // ترجمة العناصر الأساسية للواجهة
+                document.getElementById('cardTitle').innerText = "البنية التحتية السحابية";
+                document.getElementById('cardDesc').innerText = "قم بنشر بيئات عالية الأداء فوراً داخل الشبكة السحابية.";
+                document.getElementById('lblServer').innerText = "سيرفر";
+                document.getElementById('lblSport').innerText = "دعم";
+                document.getElementById('btnStartText').innerHTML = '<i class="fa-solid fa-bolt"></i> ابدأ الآن';
+                document.getElementById('btnDiscordText').innerHTML = '<i class="fa-brands fa-discord"></i> دخول الديسكورد';
             } else {
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'block';
+                document.documentElement.dir = 'ltr';
+                document.getElementById('enBtn').classList.add('active');
+                document.getElementById('arBtn').classList.remove('active');
             }
         }
 
-        // إغلاق النوافذ
-        function closeAuthModal() {
-            overlay.classList.remove('active');
+        function setLanguage(lang) {
+            localStorage.setItem('siteLang', lang);
+            // عمل ريست وإعادة تحميل فوري للموقع لتجنب التعليق وتطبيق الترجمة بشكل سليم مية بالمية
+            window.location.reload();
         }
 
-        // فتح وإغلاق القائمة الجانبية
         function toggleSidebar(open) {
             const sidebar = document.getElementById('sidebarMenu');
             if(open) sidebar.classList.add('active');
             else sidebar.classList.remove('active');
         }
 
-        // فتح وإغلاق المطورين داخل القائمة الجانبية
         function toggleDevelopers() {
             const devDropdown = document.getElementById('devDropdown');
-            if(devDropdown.style.display === 'block') {
-                devDropdown.style.display = 'none';
+            devDropdown.style.display = devDropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function openAuthModal(mode) {
+            document.getElementById('authOverlay').classList.add('active');
+            if(mode === 'login') {
+                document.getElementById('loginModal').style.display = 'block';
+                document.getElementById('registerModal').style.display = 'none';
             } else {
-                devDropdown.style.display = 'block';
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('registerModal').style.display = 'block';
             }
         }
 
-        // تحديث دالة تغيير اللغة لتغيير حالة الأزرار النشطة
-        function changeLang(lang, buttonElement) {
-            // إزالة الحالة النشطة من كل أزرار اللغات
-            document.querySelectorAll('.lang-btn-box').forEach(btn => btn.classList.remove('active'));
-            // إضافة الحالة النشطة للزر المضغوط
-            buttonElement.classList.add('active');
-            
-            if(lang === 'en') {
-                document.documentElement.dir = 'ltr';
-                document.documentElement.lang = 'en';
-                // بقية نصوص الترجمة هنا...
-            } else {
-                document.documentElement.dir = 'rtl';
-                document.documentElement.lang = 'ar';
-                // بقية نصوص الترجمة العربية هنا...
-            }
-        }
+        function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
 
-        // محاكاة إرسال رابط التفعيل للإيميل
         function handleRegisterSubmit(e) {
             e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            alert(`تم إرسال رابط التحقق بنجاح إلى البريد: ${email}\n\nبرجاء فتح الرابط في بريدك لتأكيد حسابك، ثم ارجع للموقع مجدداً لتسجيل الدخول!`);
+            alert(`تم إرسال رابط التحقق بنجاح إلى البريد الإلكتروني المكتوب!\n\nبرجاء تفقد بريدك لتفعيل الحساب، ثم عد للموقع لتسجيل الدخول.`);
             openAuthModal('login');
         }
 
-        // تسجيل الدخول والتحويل للوحة التحكم المفترضة بعد التحقق
         function handleLoginSubmit(e) {
             e.preventDefault();
-            alert('تم تسجيل الدخول بنجاح! جاري تحويلك إلى لوحة التحكم وتحميل السيرفر السحابي...');
-            // هنا السيستم بيحولك فوراً لصفحة اللوحة والعداد اللي عملناها سوا
-            window.location.href = 'dashboard.html'; 
+            alert('تم تسجيل الدخول بنجاح! جاري تحويلك للوحة التحكم...');
+            window.location.href = 'dashboard.html';
         }
     </script>
 </body>
