@@ -741,7 +741,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // ضفنا هنا دالة fetchSignInMethodsForEmail للفحص المسبق
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         
         const firebaseConfig = {
           apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
@@ -756,7 +757,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // [1] دالة إرسال الإيميل مع جدار التوست ولغات متوافقة
+        // [1] دالة فحص الحساب أولاً سحابياً ثم إرسال الإيميل في حالة السلامة
         window.handleRegisterSubmit = function(e) {
             e.preventDefault();
             const t = translations[currentLang];
@@ -766,38 +767,67 @@
             const confirmPassword = document.getElementById('regConfirmPassword').value;
             const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
             
+            // [فحص 1] تطابق كلمات المرور
             if (password !== confirmPassword) {
                 showCyberToast(t.passMismatch);
                 return;
             }
 
             const submitBtn = e.target.querySelector('button[type="submit"]');
-            submitBtn.innerText = t.sendingEmail;
+            const originalBtnText = submitBtn.innerText;
+            
+            // تحويل الزر لحالة الفحص والتحقق من السيرفر
+            submitBtn.innerText = currentLang === 'ar' ? "جاري فحص الحساب..." : "Checking account...";
             submitBtn.disabled = true;
 
-            const timestamp = Date.now(); 
-            const randomToken = Math.random().toString(36).substring(2, 10); 
+            // [فحص 2] الفحص السحابي الفوري قبل أي إرسال 🛰️
+            fetchSignInMethodsForEmail(auth, email)
+                .then((signInMethods) => {
+                    // لو المصفوفة رجعت فيها بيانات، يعني الإيميل ده محجوز ومسجل مسبقاً
+                    if (signInMethods.length > 0) {
+                        showCyberToast(t.alreadyActivated);
+                        submitBtn.innerText = t.btnRegSubmit;
+                        submitBtn.disabled = false;
+                        return; // وقف العملية فوراً ولا ترسل أي شيء!
+                    }
 
-            const encodedPass = btoa(password); 
-            const encodedUser = encodeURIComponent(username);
-            
-            const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
+                    // إذا كان الحساب نظيف وغير مسجل، نبدأ عملية التشفير والإرسال الـ 10 دقائق 🚀
+                    submitBtn.innerText = t.sendingEmail;
 
-            const templateParams = {
-                user_email: email,
-                user_name: username,
-                verification_link: verificationLink, 
-                reply_to: "support@thefuture.com"
-            };
-            
-            emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
-                .then(function() {
-                    showCyberToast(t.emailSuccess.replace("{email}", email));
-                    submitBtn.innerText = t.btnRegSubmit;
-                    submitBtn.disabled = false;
-                    closeAuthModal();
-                }, function(err) {
-                    showCyberToast(t.emailFailed);
+                    const timestamp = Date.now(); 
+                    const randomToken = Math.random().toString(36).substring(2, 10); 
+
+                    const encodedPass = btoa(password); 
+                    const encodedUser = encodeURIComponent(username);
+                    
+                    const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
+
+                    const templateParams = {
+                        user_email: email,
+                        user_name: username,
+                        verification_link: verificationLink, 
+                        reply_to: "support@thefuture.com"
+                    };
+                    
+                    emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                        .then(function() {
+                            showCyberToast(t.emailSuccess.replace("{email}", email));
+                            submitBtn.innerText = t.btnRegSubmit;
+                            submitBtn.disabled = false;
+                            closeAuthModal();
+                        }, function(err) {
+                            showCyberToast(t.emailFailed);
+                            submitBtn.innerText = t.btnRegSubmit;
+                            submitBtn.disabled = false;
+                        });
+                })
+                .catch((error) => {
+                    // حماية إضافية لو الفايربيز رفض الفحص بسبب أن الحساب مستخدم بالفعل
+                    if (error.code === 'auth/email-already-in-use' || error.message.includes('already')) {
+                        showCyberToast(t.alreadyActivated);
+                    } else {
+                        showCyberToast(t.activationError + error.message);
+                    }
                     submitBtn.innerText = t.btnRegSubmit;
                     submitBtn.disabled = false;
                 });
