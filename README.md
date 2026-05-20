@@ -130,7 +130,7 @@
         .dropdown-subtitle { font-size: 0.75rem; color: #64748b; margin-bottom: 8px; }
         .founder-name { color: #ff3b3b; text-shadow: 0 0 8px rgba(255, 59, 59, 0.3); margin: 4px 0; font-size: 0.85rem; }
 
-        /* أزرار اللغات جنب بعضها */
+        /* أزرار اللغات جنبه بعضها */
         .lang-section {
             margin-top: 30px;
             display: flex;
@@ -373,6 +373,42 @@
 
         .oauth-buttons { display: flex; gap: 10px; }
         .oauth-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+
+        /* 🔮 نظام التوست السيبراني الأسطوري الجديد 🔮 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-40px);
+            z-index: 10000;
+            width: 90%;
+            max-width: 450px;
+            background: linear-gradient(135deg, #0a0518 0%, #030206 100%);
+            border: 1px solid rgba(255, 255, 255, 0.9); /* حد ابيض لامع وواضح */
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 30px rgba(18, 9, 36, 0.8), 0 0 15px rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-container.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .toast-text {
+            color: #34d399; /* لون اخضر فاتح مضيء وثابت للكل */
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.5;
+            text-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+        }
     </style>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
@@ -380,6 +416,10 @@
     </script>
 </head>
 <body>
+
+    <div class="toast-container" id="cyberToast">
+        <div class="toast-text" id="toastMessage"></div>
+    </div>
 
     <nav>
         <a href="#" class="nav-logo">Host The Future</a>
@@ -396,19 +436,19 @@
         <div class="sidebar-content">
             <div class="sidebar-item" onclick="toggleDevelopers()">
                 <i class="fa-solid fa-code"></i> 
-                <span>Developers</span> 
+                <span id="sideDevs">Developers</span> 
                 <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: auto; margin-right: auto;"></i>
             </div>
             
             <div class="sidebar-dropdown" id="devDropdown">
-                <div class="dropdown-title">مؤسسين (The Future)</div>
-                <div class="dropdown-subtitle">(المؤسسين من أصول عربيه)</div>
-                <div class="founder-name">المؤسس: مالك</div>
-                <div class="founder-name">المؤسس: وسيم</div>
+                <div class="dropdown-title" id="dropTitle">مؤسسين (The Future)</div>
+                <div class="dropdown-subtitle" id="dropSub">(المؤسسين من أصول عربيه)</div>
+                <div class="founder-name" id="founderMalek">المؤسس: مالك</div>
+                <div class="founder-name" id="founderWaseem">المؤسس: وسيم</div>
             </div>
 
-            <div class="sidebar-item" onclick="alert('SOON')">
-                <i class="fa-solid fa-screwdriver-wrench"></i> <span>Tools</span>
+            <div class="sidebar-item" onclick="showCyberToast(translations[currentLang].soonText)">
+                <i class="fa-solid fa-screwdriver-wrench"></i> <span id="sideTools">Tools</span>
             </div>
 
             <div class="lang-section">
@@ -434,7 +474,7 @@
 
             <div class="stats-container">
                 <div class="stat-box">
-                    <div class="stat-num">Free</div>
+                    <div class="stat-num" id="lblFree">Free</div>
                     <div class="stat-label" id="lblServer">Server</div>
                 </div>
                 <div class="stat-box">
@@ -457,217 +497,217 @@
         
         <div class="auth-modal" id="loginModal">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
-            <div class="auth-title">Login</div>
+            <div class="auth-title" id="modalLoginTitle">Login</div>
             <form onsubmit="handleLoginSubmit(event)">
                 <div class="input-group">
-                    <label>Email Address</label>
+                    <label id="lblLogEmail">Email Address</label>
                     <input type="email" id="logEmail" required placeholder="name@example.com">
                 </div>
                 <div class="input-group">
-                    <label>Password</label>
+                    <label id="lblLogPass">Password</label>
                     <input type="password" id="logPassword" required placeholder="••••••••">
                 </div>
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheckLogin" required>
-                    <label for="captchaCheckLogin" style="font-size: 0.8rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
+                    <label id="lblLogRobot" for="captchaCheckLogin" style="font-size: 0.8rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
                     <i class="fa-solid fa-shield-halved" style="color: #34d399; margin-left: auto;"></i>
                 </div>
-                <button type="submit" class="action-btn btn-start" style="margin-bottom:0;">Login</button>
+                <button type="submit" class="action-btn btn-start" id="btnLogSubmit" style="margin-bottom:0;">Login</button>
             </form>
-            <div class="oauth-divider">Or Sign In With</div>
+            <div class="oauth-divider" id="divLogOauth">Or Sign In With</div>
             <div class="oauth-buttons">
-                <button class="oauth-btn" style="background:#fff; color:#000;" onclick="alert('Connecting to Google...')"><i class="fa-brands fa-google"></i> Google</button>
-                <button class="oauth-btn" style="background:#5865F2; color:#fff;" onclick="alert('Connecting to Discord...')"><i class="fa-brands fa-discord"></i> Discord</button>
+                <button class="oauth-btn" style="background:#fff; color:#000;" onclick="showCyberToast(translations[currentLang].oauthGoogle)"><i class="fa-brands fa-google"></i> Google</button>
+                <button class="oauth-btn" style="background:#5865F2; color:#fff;" onclick="showCyberToast(translations[currentLang].oauthDiscord)"><i class="fa-brands fa-discord"></i> Discord</button>
             </div>
-            <div class="switch-auth-mode">Don't have an account? <span onclick="openAuthModal('register')">New account</span></div>
+            <div class="switch-auth-mode" id="switchRegBox">Don't have an account? <span onclick="openAuthModal('register')">New account</span></div>
         </div>
 
         <div class="auth-modal" id="registerModal" style="display:none;">
             <span class="close-btn" onclick="closeAuthModal()">&times;</span>
-            <div class="auth-title">Create New Account</div>
+            <div class="auth-title" id="modalRegTitle">Create New Account</div>
             <form onsubmit="handleRegisterSubmit(event)">
                 <div class="input-group">
-                    <label>Username</label>
+                    <label id="lblRegUser">Username</label>
                     <input type="text" id="regUser" required placeholder="e.g. enzo_dev">
                 </div>
                 <div class="input-group">
-                    <label>Email Address</label>
+                    <label id="lblRegEmail">Email Address</label>
                     <input type="email" id="regEmail" required placeholder="yourname@gmail.com">
                 </div>
                 <div class="input-group">
-                    <label>Password</label>
+                    <label id="lblRegPass">Password</label>
                     <input type="password" id="regPassword" required placeholder="••••••••">
                 </div>
                 <div class="input-group">
-                    <label>Confirm Password</label>
+                    <label id="lblRegConfirm">Confirm Password</label>
                     <input type="password" id="regConfirmPassword" required placeholder="••••••••">
                 </div>
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheckReg" required>
-                    <label for="captchaCheckReg" style="font-size: 0.8rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
+                    <label id="lblRegRobot" for="captchaCheckReg" style="font-size: 0.8rem; color: #94a3b8; cursor: pointer;">I am not a robot</label>
                     <i class="fa-solid fa-shield-halved" style="color: #34d399; margin-left: auto;"></i>
                 </div>
-                <button type="submit" class="action-btn btn-start" style="margin-bottom:0; background:#34d399; color:#000;">Verify Email</button>
+                <button type="submit" class="action-btn btn-start" id="btnRegSubmit" style="margin-bottom:0; background:#34d399; color:#000;">Verify Email</button>
             </form>
-            <div class="switch-auth-mode">Already have an account? <span onclick="openAuthModal('login')">Login</span></div>
+            <div class="switch-auth-mode" id="switchLogBox">Already have an account? <span onclick="openAuthModal('login')">Login</span></div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        
-        const firebaseConfig = {
-          apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
-          authDomain: "host-the-future-b9ef5.firebaseapp.com",
-          projectId: "host-the-future-b9ef5",
-          storageBucket: "host-the-future-b9ef5.firebasestorage.app",
-          messagingSenderId: "613938151767",
-          appId: "1:613938151767:web:f3bb0d95f14cc8d1cb7e12",
-          measurementId: "G-2B5YWFC4VV"
+    <script>
+        const currentLang = localStorage.getItem('siteLang') || 'en';
+
+        const translations = {
+            en: {
+                soonText: "SOON",
+                oauthGoogle: "Connecting to Google...",
+                oauthDiscord: "Connecting to Discord...",
+                passMismatch: "❌ Password dynamic mismatch! Please retype password correctly.",
+                sendingEmail: "Sending Verification...",
+                emailSuccess: "📩 A unique validation link sent to: {email}\n\n⚠️ Core alert: Link expires in 10 minutes! Firebase deployment triggers upon user interaction.",
+                emailFailed: "❌ Email dispatch failed. Review EmailJS configurations or dynamic templates.",
+                linkExpired: "❌ Verification expired! (Exceeded 10 minutes limitation).\n\nPlease submit data again for fresh token production.",
+                validatingToken: "⏳ Active link secured! Propagating data nodes onto Cloud Firebase database instant...",
+                activationSuccess: "✅ Account authenticated successfully {user}!\nCloud verification node completed onto Firebase server.",
+                alreadyActivated: "❌ Node redundancy: This email credentials already registered on the active cloud registry.",
+                activationError: "❌ Cloud configuration fault during deployment: ",
+                loginSuccess: "✅ Credentials match! Redirecting infrastructure control network to dashboard panel...",
+                loginError: "❌ Authentication mismatch: Unverified mail node or invalid security credential parameters.",
+                
+                cardTitle: "Cloud Infrastructure",
+                cardDesc: "Deploy high performance environments instantly in the cloud network.",
+                lblFree: "Free",
+                lblServer: "Server",
+                lblSport: "Sport",
+                btnStartText: '<i class="fa-solid fa-bolt"></i> Start',
+                btnDiscordText: '<i class="fa-brands fa-discord"></i> Join Discord',
+                sideDevs: "Developers",
+                dropTitle: "Founders (The Future)",
+                dropSub: "(Founders are of Arab descent)",
+                founderMalek: "Founder: Malek",
+                founderWaseem: "Founder: Waseem",
+                sideTools: "Tools",
+                modalLoginTitle: "Login",
+                lblLogEmail: "Email Address",
+                lblLogPass: "Password",
+                lblLogRobot: "I am not a robot",
+                btnLogSubmit: "Login",
+                divLogOauth: "Or Sign In With",
+                switchRegBox: 'Don\'t have an account? <span onclick="openAuthModal(\'register\')">New account</span>',
+                modalRegTitle: "Create New Account",
+                lblRegUser: "Username",
+                lblRegEmail: "Email Address",
+                lblRegPass: "Password",
+                lblRegConfirm: "Confirm Password",
+                lblRegRobot: "I am not a robot",
+                btnRegSubmit: "Verify Email",
+                switchLogBox: 'Already have an account? <span onclick="openAuthModal(\'login\')">Login</span>'
+            },
+            ar: {
+                soonText: "قريباً جداً",
+                oauthGoogle: "جاري الاتصال بحساب جوجل...",
+                oauthDiscord: "جاري الاتصال بحساب ديسكورد...",
+                passMismatch: "❌ كلمتا المرور غير متطابقتين! برجاء التأكد من كتابتهما بشكل متطابق.",
+                sendingEmail: "جاري إرسال التفعيل...",
+                emailSuccess: "📩 تم إرسال رابط تفعيل فريد إلى: {email}\n\n⚠️ تنبيه هام: الرابط صالِح لمدة 10 دقائق فقط! لن يتم حفظ الحساب في الفايربيز إلا عند الضغط عليه.",
+                emailFailed: "❌ فشل إرسال إيميل التحقق، يرجى مراجعة إعدادات الـ EmailJS والـ Template.",
+                linkExpired: "❌ عذراً! انتهت صلاحية هذا الرابط (مر عليه أكثر من 10 دقائق).\n\nبرجاء كتابة بياناتك من جديد للحصول على رابط صالح ونشط.",
+                validatingToken: "⏳ الرابط صالح وموثق! جاري تفعيل وحفظ حسابك سحابياً فوراً...",
+                activationSuccess: "✅ مبروك يا {user}!\nتم إثبات هويتك بنجاح وحفظ الحساب في خوادم الفايربيز السحابية.",
+                alreadyActivated: "❌ هذا الحساب تم تفعيله وحفظه في السيرفر بالفعل مسبقاً!",
+                activationError: "❌ خطأ سحابي أثناء تفعيل الحساب: ",
+                loginSuccess: "✅ تم التحقق والمطابقة! جاري تحويلك إلى لوحة التحكم الشخصية...",
+                loginError: "❌ خطأ في الدخول: البريد غير مسجل (لم يتم تفعيله بعد) أو كلمة المرور غير صحيحة.",
+                
+                cardTitle: "البنية التحتية السحابية",
+                cardDesc: "قم بنشر بيئات عالية الأداء فوراً داخل الشبكة السحابية.",
+                lblFree: "مجاني",
+                lblServer: "سيرفر",
+                lblSport: "دعم",
+                btnStartText: '<i class="fa-solid fa-bolt"></i> ابدأ الآن',
+                btnDiscordText: '<i class="fa-brands fa-discord"></i> دخول الديسكورد',
+                sideDevs: "المطورين",
+                dropTitle: "مؤسسين (The Future)",
+                dropSub: "(المؤسسين من أصول عربيه)",
+                founderMalek: "المؤسس: مالك",
+                founderWaseem: "المؤسس: وسيم",
+                sideTools: "الأدوات",
+                modalLoginTitle: "تسجيل الدخول",
+                lblLogEmail: "البريد الإلكتروني",
+                lblLogPass: "كلمة المرور",
+                lblLogRobot: "أنا لست برنامج روبوت",
+                btnLogSubmit: "تسجيل الدخول",
+                divLogOauth: "أو الدخول بواسطة",
+                switchRegBox: 'ليس لديك حساب؟ <span onclick="openAuthModal(\'register\')">حساب جديد</span>',
+                modalRegTitle: "إنشاء حساب جديد",
+                lblRegUser: "اسم المستخدم",
+                lblRegEmail: "البريد الإلكتروني",
+                lblRegPass: "كلمة المرور",
+                lblRegConfirm: "تأكيد كلمة المرور",
+                lblRegRobot: "أنا لست برنامج روبوت",
+                btnRegSubmit: "تفعيل البريد",
+                switchLogBox: 'لديك حساب بالفعل؟ <span onclick="openAuthModal(\'login\')">تسجيل الدخول</span>'
+            }
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // [1] دالة إرسال الإيميل أولاً وحساب الـ 10 دقائق من غير حفظ في قاعدة البيانات
-        window.handleRegisterSubmit = function(e) {
-            e.preventDefault();
+        // دالة الـ Toast الفخمة والسينمائية المحمية
+        function showCyberToast(msg) {
+            const toast = document.getElementById('cyberToast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = msg;
+            toast.classList.add('show');
             
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
-            
-            if (password !== confirmPassword) {
-                alert("❌ كلمتا المرور غير متطابقتين! برجاء التأكد من كتابتهما بشكل متطابق.");
-                return;
-            }
-
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Sending Verification...";
-            submitBtn.disabled = true;
-
-            const timestamp = Date.now(); 
-            const randomToken = Math.random().toString(36).substring(2, 10); 
-
-            const encodedPass = btoa(password); 
-            const encodedUser = encodeURIComponent(username);
-            
-            // ربط المسار أوتوماتيكياً بصفحة الجيتهاب الحقيقية بتاعتك محمل بالوقت والتtoken المؤقت 🎯
-            const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
-
-            const templateParams = {
-                user_email: email,
-                user_name: username,
-                verification_link: verificationLink, 
-                reply_to: "support@thefuture.com"
-            };
-            
-            emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
-                .then(function() {
-                    alert(`📩 تم إرسال رابط تفعيل فريد إلى: ${email}\n\n⚠️ تنبيه هام: الرابط صالِح لمدة 10 دقائق فقط! لن يتم حفظ الحساب في الفايربيز إلا عند الضغط عليه.`);
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                    closeAuthModal();
-                }, function(err) {
-                    alert("❌ فشل إرسال إيميل التحقق، يرجى مراجعة إعدادات الـ EmailJS والـ Template.");
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                });
-        };
-
-        // [2] فحص طابع الوقت (Timestamp) والتفعيل الفوري عند دخول رابط الجيتهاب الموثق
-        function checkVerificationRoute() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const action = urlParams.get('action');
-            const email = urlParams.get('email');
-            const key = urlParams.get('key');
-            const user = urlParams.get('user');
-            const linkTime = urlParams.get('time'); 
-
-            if (action === 'verify' && email && key && linkTime) {
-                
-                const currentTime = Date.now();
-                const timeDifference = currentTime - parseInt(linkTime);
-                const tenMinutesInMs = 10 * 60 * 1000; // 10 دقائق بالملي ثانية
-
-                // جدار الحماية الزمني ⏱️
-                if (timeDifference > tenMinutesInMs) {
-                    alert("❌ عذراً! انتهت صلاحية هذا الرابط (مر عليه أكثر من 10 دقائق).\n\nبرجاء كتابة بياناتك من جديد للحصول على رابط صالح ونشط.");
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    openAuthModal('register'); 
-                    return;
-                }
-
-                alert("⏳ الرابط صالح وموثق! جاري تفعيل وحفظ حسابك سحابياً فوراً...");
-                
-                const decodedPassword = atob(key);
-
-                // حفظ الحساب بشكل نهائي وحصري الآن بعد أن فتح الإيميل
-                createUserWithEmailAndPassword(auth, email, decodedPassword)
-                    .then((userCredential) => {
-                        localStorage.setItem('accountVerified', 'true');
-                        alert(`✅ مبروك يا ${decodeURIComponent(user || 'بطل')}!\nتم إثبات هويتك بنجاح وحفظ الحساب في خوادم الفايربيز السحابية.`);
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        openAuthModal('login');
-                    })
-                    .catch((error) => {
-                        if (error.code === 'auth/email-already-in-use') {
-                            alert("❌ هذا الحساب تم تفعيله وحفظه في السيرفر بالفعل مسبقاً!");
-                        } else {
-                            alert("❌ خطأ سحابي أثناء تفعيل الحساب: " + error.message);
-                        }
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    });
-            }
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5500);
         }
 
-        // تفعيل فحص الرابط التلقائي فور تحميل الصفحة
-        window.addEventListener('load', checkVerificationRoute);
-
-        // [3] دالة تسجيل الدخول والتحقق الفايربيز
-        window.handleLoginSubmit = function(e) {
-            e.preventDefault();
+        // تطبيق لغات الموقع الشاملة
+        (function applyLanguageStyles() {
+            document.documentElement.lang = currentLang;
+            const t = translations[currentLang];
             
-            const email = document.getElementById('logEmail').value;
-            const password = document.getElementById('logPassword').value;
-
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    localStorage.setItem('accountVerified', 'true');
-                    alert('✅ تم التحقق والمطابقة! جاري تحويلك إلى لوحة التحكم الشخصية...');
-                    window.location.href = 'dashboard.html';
-                })
-                .catch((error) => {
-                    alert('❌ خطأ في الدخول: البريد غير مسجل (لم يتم تفعيله بعد) أو كلمة المرور غير صحيحة.');
-                });
-        };
-    </script>
-
-    <script>
-        const savedLang = localStorage.getItem('siteLang') || 'en';
-        applyLanguageStyles(savedLang);
-
-        function applyLanguageStyles(lang) {
-            document.documentElement.lang = lang;
-            if (lang === 'ar') {
+            if (currentLang === 'ar') {
                 document.documentElement.dir = 'rtl';
                 document.getElementById('arBtn').classList.add('active');
                 document.getElementById('enBtn').classList.remove('active');
-                document.getElementById('cardTitle').innerText = "البنية التحتية السحابية";
-                document.getElementById('cardDesc').innerText = "قم بنشر بيئات عالية الأداء فوراً داخل الشبكة السحابية.";
-                document.getElementById('lblServer').innerText = "سيرفر";
-                document.getElementById('lblSport').innerText = "دعم";
-                document.getElementById('btnStartText').innerHTML = '<i class="fa-solid fa-bolt"></i> ابدأ الآن';
-                document.getElementById('btnDiscordText').innerHTML = '<i class="fa-brands fa-discord"></i> دخول الديسكورد';
             } else {
                 document.documentElement.dir = 'ltr';
                 document.getElementById('enBtn').classList.add('active');
                 document.getElementById('arBtn').classList.remove('active');
             }
-        }
+
+            // حقن الترجمات في العناصر
+            document.getElementById('cardTitle').innerText = t.cardTitle;
+            document.getElementById('cardDesc').innerText = t.cardDesc;
+            document.getElementById('lblFree').innerText = t.lblFree;
+            document.getElementById('lblServer').innerText = t.lblServer;
+            document.getElementById('lblSport').innerText = t.lblSport;
+            document.getElementById('btnStartText').innerHTML = t.btnStartText;
+            document.getElementById('btnDiscordText').innerHTML = t.btnDiscordText;
+            document.getElementById('sideDevs').innerText = t.sideDevs;
+            document.getElementById('dropTitle').innerText = t.dropTitle;
+            document.getElementById('dropSub').innerText = t.dropSub;
+            document.getElementById('founderMalek').innerText = t.founderMalek;
+            document.getElementById('founderWaseem').innerText = t.founderWaseem;
+            document.getElementById('sideTools').innerText = t.sideTools;
+            
+            document.getElementById('modalLoginTitle').innerText = t.modalLoginTitle;
+            document.getElementById('lblLogEmail').innerText = t.lblLogEmail;
+            document.getElementById('lblLogPass').innerText = t.lblLogPass;
+            document.getElementById('lblLogRobot').innerText = t.lblLogRobot;
+            document.getElementById('btnLogSubmit').innerText = t.btnLogSubmit;
+            document.getElementById('divLogOauth').innerText = t.divLogOauth;
+            document.getElementById('switchRegBox').innerHTML = t.switchRegBox;
+            
+            document.getElementById('modalRegTitle').innerText = t.modalRegTitle;
+            document.getElementById('lblRegUser').innerText = t.lblRegUser;
+            document.getElementById('lblRegEmail').innerText = t.lblRegEmail;
+            document.getElementById('lblRegPass').innerText = t.lblRegPass;
+            document.getElementById('lblRegConfirm').innerText = t.lblRegConfirm;
+            document.getElementById('lblRegRobot').innerText = t.lblRegRobot;
+            document.getElementById('btnRegSubmit').innerText = t.btnRegSubmit;
+            document.getElementById('switchLogBox').innerHTML = t.switchLogBox;
+        })();
 
         function setLanguage(lang) {
             localStorage.setItem('siteLang', lang);
@@ -697,9 +737,144 @@
         }
 
         function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
+    </script>
 
-        const urlParams = new URLSearchParams(window.location.search);
-if(urlParams.get('open') === 'login') { openAuthModal('login'); }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
+          authDomain: "host-the-future-b9ef5.firebaseapp.com",
+          projectId: "host-the-future-b9ef5",
+          storageBucket: "host-the-future-b9ef5.firebasestorage.app",
+          messagingSenderId: "613938151767",
+          appId: "1:613938151767:web:f3bb0d95f14cc8d1cb7e12",
+          measurementId: "G-2B5YWFC4VV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // [1] دالة إرسال الإيميل مع جدار التوست ولغات متوافقة
+        window.handleRegisterSubmit = function(e) {
+            e.preventDefault();
+            const t = translations[currentLang];
+            
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
+            
+            if (password !== confirmPassword) {
+                showCyberToast(t.passMismatch);
+                return;
+            }
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerText = t.sendingEmail;
+            submitBtn.disabled = true;
+
+            const timestamp = Date.now(); 
+            const randomToken = Math.random().toString(36).substring(2, 10); 
+
+            const encodedPass = btoa(password); 
+            const encodedUser = encodeURIComponent(username);
+            
+            const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
+
+            const templateParams = {
+                user_email: email,
+                user_name: username,
+                verification_link: verificationLink, 
+                reply_to: "support@thefuture.com"
+            };
+            
+            emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                .then(function() {
+                    showCyberToast(t.emailSuccess.replace("{email}", email));
+                    submitBtn.innerText = t.btnRegSubmit;
+                    submitBtn.disabled = false;
+                    closeAuthModal();
+                }, function(err) {
+                    showCyberToast(t.emailFailed);
+                    submitBtn.innerText = t.btnRegSubmit;
+                    submitBtn.disabled = false;
+                });
+        };
+
+        // [2] فحص طابع الوقت والتوكنز التلقائي مع الترجمة الفورية
+        function checkVerificationRoute() {
+            const t = translations[currentLang];
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            const email = urlParams.get('email');
+            const key = urlParams.get('key');
+            const user = urlParams.get('user');
+            const linkTime = urlParams.get('time'); 
+
+            if (action === 'verify' && email && key && linkTime) {
+                const currentTime = Date.now();
+                const timeDifference = currentTime - parseInt(linkTime);
+                const tenMinutesInMs = 10 * 60 * 1000;
+
+                if (timeDifference > tenMinutesInMs) {
+                    showCyberToast(t.linkExpired);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    openAuthModal('register'); 
+                    return;
+                }
+
+                showCyberToast(t.validatingToken);
+                const decodedPassword = atob(key);
+
+                createUserWithEmailAndPassword(auth, email, decodedPassword)
+                    .then((userCredential) => {
+                        localStorage.setItem('accountVerified', 'true');
+                        localStorage.setItem('verifiedEmail', 'true');
+                        showCyberToast(t.activationSuccess.replace("{user}", decodeURIComponent(user || 'User')));
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        openAuthModal('login');
+                    })
+                    .catch((error) => {
+                        if (error.code === 'auth/email-already-in-use') {
+                            showCyberToast(t.alreadyActivated);
+                        } else {
+                            showCyberToast(t.activationError + error.message);
+                        }
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    });
+            }
+        }
+
+        window.addEventListener('load', checkVerificationRoute);
+
+        // [3] دالة تسجيل الدخول والتوست المطابق للغات
+        window.handleLoginSubmit = function(e) {
+            e.preventDefault();
+            const t = translations[currentLang];
+            
+            const email = document.getElementById('logEmail').value;
+            const password = document.getElementById('logPassword').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    localStorage.setItem('accountVerified', 'true');
+                    showCyberToast(t.loginSuccess);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    showCyberToast(t.loginError);
+                });
+        };
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('open') === 'login') { openAuthModal('login'); }
+        });
     </script>
 </body>
 </html>
