@@ -495,7 +495,7 @@
             <form onsubmit="handleRegisterSubmit(event)">
                 <div class="input-group">
                     <label>Username</label>
-                    <input type="text" required placeholder="e.g. enzo_dev">
+                    <input type="text" id="regUser" required placeholder="e.g. enzo_dev">
                 </div>
                 <div class="input-group">
                     <label>Email Address</label>
@@ -503,11 +503,11 @@
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" required placeholder="••••••••">
+                    <input type="password" id="regPassword" required placeholder="••••••••">
                 </div>
                 <div class="input-group">
                     <label>Confirm Password</label>
-                    <input type="password" required placeholder="••••••••">
+                    <input type="password" id="regConfirmPassword" required placeholder="••••••••">
                 </div>
                 <button type="submit" class="action-btn btn-start" style="margin-bottom:0; background:#34d399; color:#000;">Verify Email</button>
             </form>
@@ -568,64 +568,80 @@
             }
         }
 
-        function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
+        function closeAuthModal() { 
+            document.getElementById('authOverlay').classList.remove('active'); 
+        }
 
-        function handleRegisterSubmit(e) {
+        // دالة إنشاء الحساب الحقيقية وتربيطها بالفايربيز و EmailJS
+        window.handleRegisterSubmit = function(e) {
             e.preventDefault();
             
-            // جلب الإيميل واسم المستخدم اللي الشخص كتبهم
             const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
             const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
             
-            // تغيير نص الزرار عشان اليوزر يعرف إنه جاري الإرسال
             const submitBtn = e.target.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Sending...";
+            submitBtn.innerText = "Processing...";
             submitBtn.disabled = true;
 
-            // تجهيز البيانات المتطابقة مع الـ Template بتاعك
-            const templateParams = {
-                user_email: email,
-                user_name: username,
-                reply_to: "support@thefuture.com"
-            };
-
-            // إرسال الإيميل الحقيقي فوراً عبر السيرفر
-            emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
-                .then(function(response) {
-                    alert(`✅ تم إرسال رابط التحقق بنجاح إلى البريد: ${email}\n\nبرجاء فتح بريدك لتفعيل الحساب، ثم عد للموقع لتسجيل الدخول!`);
+            // 1. تسجيل المستخدم في قاعدة بيانات Firebase بجد!
+            // ملحوظة: الـ auth مستدعى فوق في كود الموديول الأساسي
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    
+                    // 2. إذا نجح التسجيل في السيرفر، نقوم بإرسال إيميل التفعيل عبر EmailJS
+                    const templateParams = {
+                        user_email: email,
+                        user_name: username,
+                        reply_to: "support@thefuture.com"
+                    };
+                    
+                    emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                        .then(function() {
+                            alert(`✅ تم إنشاء الحساب في السيرفر وإرسال رابط التفعيل إلى: ${email}\n\nيرجى تفقد بريدك لتأكيد الهوية بفتح الرابط الجديد.`);
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                            openAuthModal('login'); // تحويله لصفحة تسجيل الدخول
+                        }, function(err) {
+                            alert("⚠️ تم إنشاء الحساب، ولكن فشل إرسال إيميل التفعيل. يمكنك تجربة الدخول مباشرة.");
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                            openAuthModal('login');
+                        });
+                })
+                .catch((error) => {
                     submitBtn.innerText = originalText;
                     submitBtn.disabled = false;
-                    openAuthModal('login'); // تحويله لصفحة تسجيل الدخول
-                }, function(error) {
-                    alert("❌ عذراً، حدث خطأ أثناء إرسال الإيميل. تأكد من إعدادات الحساب.");
-                    console.log("EmailJS Error:", error);
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
+                    alert("❌ خطأ في السيرفر: " + error.message);
                 });
-        }
+        };
 
-                function handleLoginSubmit(e) {
+        // دالة تسجيل الدخول الحقيقية والتشيك على الـ localStorage والفايربيز معاً
+        window.handleLoginSubmit = function(e) {
             e.preventDefault();
             
-            // التشيك السحري: هل الشخص ده دخل على رابط الإيميل وفعل حسابه؟
+            const email = document.getElementById('logEmail').value;
+            const password = document.getElementById('logPassword').value;
+
+            // تشيك الأمان: هل فتح صفحة التفعيل المرسلة في الإيميل؟
             const isVerified = localStorage.getItem('accountVerified');
 
-            if (isVerified === 'true') {
-                alert('✅ تم التحقق من حسابك بنجاح! جاري تحويلك إلى لوحة التحكم وتحميل السيرفر...');
-                // تحويله فوراً للـ Dashboard طالما الحساب متفعل ومثبت من نفس الجهاز
-                window.location.href = 'dashboard.html'; 
-            } else {
-                // لو حاول يسجل من غير ما يفتح الرابط اللي في الإيميل
+            if (isVerified !== 'true') {
                 alert('❌ عذراً! هذا الحساب غير مفعّل. يجب عليك الضغط على رابط التفعيل المرسل إلى بريدك الإلكتروني أولاً لتتمكن من تسجيل الدخول.');
+                return;
             }
-        }
 
-        function handleLoginSubmit(e) {
-            e.preventDefault();
-            alert('تم تسجيل الدخول بنجاح! جاري تحويلك للوحة التحكم...');
-            window.location.href = 'dashboard.html';
-        }
+            // تسجيل الدخول والتحقق الحقيقي من قاعدة البيانات السحابية بجوجل
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert('✅ تم التحقق من قاعدة البيانات بنجاح! جاري تحويلك إلى لوحة التحكم وتحميل السيرفر...');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    alert('❌ خطأ في تسجيل الدخول: البريد الإلكتروني أو كلمة المرور غير صحيحة في قاعدة البيانات.');
+                });
+        };
     </script>
 </body>
 </html>
