@@ -72,7 +72,7 @@
             padding: 5px;
         }
 
-        /* القائمة الجانبية المرنة (تتطابق مع لغة الموقع وتمنع التعليق) */
+        /* القائمة الجانبية المرنة */
         .sidebar {
             position: fixed;
             top: 0;
@@ -159,7 +159,7 @@
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
         }
 
-        /* كرت المحتوى الرئيسي متناسق الحجم */
+        /* كرت المحتوى الرئيسي */
         .main-wrapper {
             flex: 1;
             display: flex;
@@ -181,7 +181,6 @@
             backdrop-filter: blur(15px);
         }
 
-        /* تم تصغير منطقة الوردة والنظام الشمسي لتناسب الهواتف تماماً */
         .universe-zone {
             position: relative;
             width: 110px;
@@ -218,7 +217,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* الوردة الفضائية المصغرة والمحاطة بالنجوم الداخلية */
         .space-black-rose {
             position: relative;
             width: 65px;
@@ -272,7 +270,6 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* صندوق الإحصائيات المعدل */
         .stats-container {
             display: flex;
             justify-content: space-between;
@@ -290,7 +287,6 @@
         .stat-num { font-size: 1.2rem; font-weight: 800; color: #34d399; }
         .stat-label { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
 
-        /* الأزرار */
         .action-btn {
             display: flex;
             align-items: center;
@@ -313,7 +309,6 @@
         .btn-discord { background: #5865F2; color: #fff; }
         .btn-discord:hover { background: #4752c4; transform: translateY(-1px); }
 
-        /* النوافذ المنبثقة (Auth Modals) */
         .auth-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -372,19 +367,16 @@
         .switch-auth-mode span { color: #00bcd4; cursor: pointer; font-weight: bold; }
         
         .oauth-divider { display: flex; align-items: center; text-align: center; color: #4b5563; margin: 15px 0; font-size: 0.75rem; }
-        .oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         html[dir="ltr"] .oauth-divider::before { margin-right: .5em; } html[dir="ltr"] .oauth-divider::after { margin-left: .5em; }
         html[dir="rtl"] .oauth-divider::before { margin-left: .5em; } html[dir="rtl"] .oauth-divider::after { margin-right: .5em; }
 
         .oauth-buttons { display: flex; gap: 10px; }
         .oauth-btn { flex: 1; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
     </style>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function() {
-            // ربط الحساب بمفتاحك العام
-            emailjs.init("LSXuDqmuHCy7-zx1w");
-        })();
+        (function() { emailjs.init("LSXuDqmuHCy7-zx1w"); })();
     </script>
 </head>
 <body>
@@ -468,11 +460,11 @@
             <form onsubmit="handleLoginSubmit(event)">
                 <div class="input-group">
                     <label>Email Address</label>
-                    <input type="email" required placeholder="name@example.com">
+                    <input type="email" id="logEmail" required placeholder="name@example.com">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" required placeholder="••••••••">
+                    <input type="password" id="logPassword" required placeholder="••••••••">
                 </div>
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheck" required>
@@ -515,8 +507,103 @@
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // بيانات السيرفر الخاص بك 🌟
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
+          authDomain: "host-the-future-b9ef5.firebaseapp.com",
+          projectId: "host-the-future-b9ef5",
+          storageBucket: "host-the-future-b9ef5.firebasestorage.app",
+          messagingSenderId: "613938151767",
+          appId: "1:613938151767:web:f3bb0d95f14cc8d1cb7e12",
+          measurementId: "G-2B5YWFC4VV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // دالة إنشاء الحساب وتربيطها بالفايربيز و EmailJS
+        window.handleRegisterSubmit = function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
+            
+            if (password !== confirmPassword) {
+                alert("❌ كلمتا المرور غير متطابقتين! برجاء التأكد من كتابتهما بشكل متطابق.");
+                return;
+            }
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Processing...";
+            submitBtn.disabled = true;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const templateParams = {
+                        user_email: email,
+                        user_name: username,
+                        reply_to: "support@thefuture.com"
+                    };
+                    
+                    emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                        .then(function() {
+                            alert(`✅ تم إنشاء الحساب في السيرفر وإرسال رابط التفعيل إلى: ${email}\n\nيرجى تفقد بريدك لتأكيد الهوية بفتح الرابط الجديد.`);
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                            openAuthModal('login'); 
+                        }, function(err) {
+                            alert("⚠️ تم إنشاء الحساب، ولكن فشل إرسال إيميل التفعيل. يمكنك تجربة الدخول مباشرة.");
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                            openAuthModal('login');
+                        });
+                })
+                .catch((error) => {
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    if (error.code === 'auth/email-already-in-use') {
+                        alert("❌ هذا البريد الإلكتروني مسجل بالفعل في قاعدة البيانات!");
+                    } else if (error.code === 'auth/weak-password') {
+                        alert("❌ كلمة المرور ضعيفة جداً! يجب أن تكون 6 أحرف أو أكثر.");
+                    } else {
+                        alert("❌ خطأ في السيرفر: " + error.message);
+                    }
+                });
+        };
+
+        // دالة تسجيل الدخول والتحقق الحقيقي من الفايربيز
+        window.handleLoginSubmit = function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('logEmail').value;
+            const password = document.getElementById('logPassword').value;
+
+            const isVerified = localStorage.getItem('accountVerified');
+
+            if (isVerified !== 'true') {
+                alert('❌ عذراً! هذا الحساب غير مفعّل. يجب عليك الضغط على رابط التفعيل المرسل إلى بريدك الإلكتروني أولاً لتتمكن من تسجيل الدخول.');
+                return;
+            }
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert('✅ تم التحقق من قاعدة البيانات بنجاح! جاري تحويلك إلى لوحة التحكم وتحميل السيرفر...');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    alert('❌ خطأ في تسجيل الدخول: البريد الإلكتروني أو كلمة المرور غير صحيحة في قاعدة البيانات.');
+                });
+        };
+    </script>
+
     <script>
-        // حفظ واسترجاع اللغة المفضلة من ذاكرة المتصفح لمنع التعليق
         const savedLang = localStorage.getItem('siteLang') || 'en';
         applyLanguageStyles(savedLang);
 
@@ -526,7 +613,6 @@
                 document.documentElement.dir = 'rtl';
                 document.getElementById('arBtn').classList.add('active');
                 document.getElementById('enBtn').classList.remove('active');
-                // ترجمة العناصر الأساسية للواجهة
                 document.getElementById('cardTitle').innerText = "البنية التحتية السحابية";
                 document.getElementById('cardDesc').innerText = "قم بنشر بيئات عالية الأداء فوراً داخل الشبكة السحابية.";
                 document.getElementById('lblServer').innerText = "سيرفر";
@@ -542,7 +628,6 @@
 
         function setLanguage(lang) {
             localStorage.setItem('siteLang', lang);
-            // عمل ريست وإعادة تحميل فوري للموقع لتجنب التعليق وتطبيق الترجمة بشكل سليم مية بالمية
             window.location.reload();
         }
 
@@ -568,80 +653,7 @@
             }
         }
 
-        function closeAuthModal() { 
-            document.getElementById('authOverlay').classList.remove('active'); 
-        }
-
-        // دالة إنشاء الحساب الحقيقية وتربيطها بالفايربيز و EmailJS
-        window.handleRegisterSubmit = function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const username = document.getElementById('regUser') ? document.getElementById('regUser').value : 'User';
-            
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Processing...";
-            submitBtn.disabled = true;
-
-            // 1. تسجيل المستخدم في قاعدة بيانات Firebase بجد!
-            // ملحوظة: الـ auth مستدعى فوق في كود الموديول الأساسي
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    
-                    // 2. إذا نجح التسجيل في السيرفر، نقوم بإرسال إيميل التفعيل عبر EmailJS
-                    const templateParams = {
-                        user_email: email,
-                        user_name: username,
-                        reply_to: "support@thefuture.com"
-                    };
-                    
-                    emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
-                        .then(function() {
-                            alert(`✅ تم إنشاء الحساب في السيرفر وإرسال رابط التفعيل إلى: ${email}\n\nيرجى تفقد بريدك لتأكيد الهوية بفتح الرابط الجديد.`);
-                            submitBtn.innerText = originalText;
-                            submitBtn.disabled = false;
-                            openAuthModal('login'); // تحويله لصفحة تسجيل الدخول
-                        }, function(err) {
-                            alert("⚠️ تم إنشاء الحساب، ولكن فشل إرسال إيميل التفعيل. يمكنك تجربة الدخول مباشرة.");
-                            submitBtn.innerText = originalText;
-                            submitBtn.disabled = false;
-                            openAuthModal('login');
-                        });
-                })
-                .catch((error) => {
-                    submitBtn.innerText = originalText;
-                    submitBtn.disabled = false;
-                    alert("❌ خطأ في السيرفر: " + error.message);
-                });
-        };
-
-        // دالة تسجيل الدخول الحقيقية والتشيك على الـ localStorage والفايربيز معاً
-        window.handleLoginSubmit = function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('logEmail').value;
-            const password = document.getElementById('logPassword').value;
-
-            // تشيك الأمان: هل فتح صفحة التفعيل المرسلة في الإيميل؟
-            const isVerified = localStorage.getItem('accountVerified');
-
-            if (isVerified !== 'true') {
-                alert('❌ عذراً! هذا الحساب غير مفعّل. يجب عليك الضغط على رابط التفعيل المرسل إلى بريدك الإلكتروني أولاً لتتمكن من تسجيل الدخول.');
-                return;
-            }
-
-            // تسجيل الدخول والتحقق الحقيقي من قاعدة البيانات السحابية بجوجل
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert('✅ تم التحقق من قاعدة البيانات بنجاح! جاري تحويلك إلى لوحة التحكم وتحميل السيرفر...');
-                    window.location.href = 'dashboard.html';
-                })
-                .catch((error) => {
-                    alert('❌ خطأ في تسجيل الدخول: البريد الإلكتروني أو كلمة المرور غير صحيحة في قاعدة البيانات.');
-                });
-        };
+        function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
     </script>
 </body>
 </html>
