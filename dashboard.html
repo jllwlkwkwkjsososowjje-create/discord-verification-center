@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | قائمة السيرفرات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* التصميم السيبراني المظلم المتناسق */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0f0c1b 0%, #05020a 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* الهيدر وعناصر اللوحة */
+        header {
+            background: rgba(10, 6, 22, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid #00f3ff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00f3ff;
+            text-shadow: 0 0 10px #00f3ff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #ff0055;
+            color: #ff0055;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff0055;
+            color: #fff;
+            box-shadow: 0 0 15px #ff0055;
+        }
+
+        /* حاوية قائمة السيرفرات */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome-msg {
+            margin-bottom: 30px;
+            font-size: 28px;
+            border-right: 4px solid #00f3ff;
+            padding-right: 15px;
+        }
+
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* كارت السيرفر السينمائي */
+        .server-card {
+            background: rgba(20, 15, 38, 0.6);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+            border-color: #00f3ff;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+        }
+
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .server-name {
+            font-size: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* لمبة الحالة المضيئة 🟢 / 🔴 */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-online {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .status-offline {
+            background: rgba(255, 0, 85, 0.1);
+            color: #ff0055;
+            border: 1px solid #ff0055;
+        }
+
+        .server-body {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .server-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 5px;
+        }
+
+        .server-info-item span:last-child {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* أزرار التحكم من برة اللستة */
+        .server-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-manage {
+            background: #00f3ff;
+            color: #000;
+        }
+
+        .btn-manage:hover {
+            box-shadow: 0 0 15px #00f3ff;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fas fa-server"></i> FUTURE HOST</div>
+        <div class="user-info">
+            <span id="userDisplay"><i class="fas fa-user-circle"></i> جاري التحميل...</span>
+            <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="welcome-msg">أهلاً بك في سحابة المستقبل 👋</h2>
+        
+        <div class="servers-grid" id="serversContainer">
+            
+            <div class="server-card">
+                <div class="server-header">
+                    <div class="server-name"><i class="fab fa-discord" style="color: #5865F2;"></i> بوت ديسكورد #01</div>
+                    <span class="status-badge status-online"><i class="fas fa-circle"></i> شغال 24/7</span>
+                </div>
+                <div class="server-body">
+                    <div class="server-info-item"><span>نوع الخادم:</span> <span>Node.js v20</span></div>
+                    <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>45MB / 512MB</span></div>
+                    <div class="server-info-item"><span>البروكسي المتصل:</span> <span>مفعّل 🌐</span></div>
+                </div>
+                <div class="server-actions">
+                    <button class="action-btn btn-manage" onclick="goToServer('bot-01')">
+                        <i class="fas fa-cog"></i> دخول وإدارة السيرفر
+                    </button>
+                </div>
+            </div>
+
+            <div class="server-card">
+                <div class="server-header">
+                    <div class="server-name"><i class="fas fa-robot"></i> سكربت العروض الفوري</div>
+                    <span class="status-badge status-offline"><i class="fas fa-circle"></i> متوقف</span>
+                </div>
+                <div class="server-body">
+                    <div class="server-info-item"><span>نوع الخادم:</span> <span>Python Script</span></div>
+                    <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>0MB / 256MB</span></div>
+                    <div class="server-info-item"><span>البروكسي المتصل:</span> <span>غير متصل ❌</span></div>
+                </div>
+                <div class="server-actions">
+                    <button class="action-btn btn-manage" onclick="goToServer('script-02')">
+                        <i class="fas fa-cog"></i> دخول وإدارة السيرفر
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // نفس الـ Config بتاعك عشان نربط الحسابات
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
+          authDomain: "host-the-future-b9ef5.firebaseapp.com",
+          projectId: "host-the-future-b9ef5",
+          storageBucket: "host-the-future-b9ef5.firebasestorage.app",
+          messagingSenderId: "613938151767",
+          appId: "1:613938151767:web:f3bb0d95f14cc8d1cb7e12",
+          measurementId: "G-2B5YWFC4VV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // [جدار الحماية]: التأكد من تسجيل الدخول وطرد الدخلاء 🛡️🛑
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // اليوزر مسجل دخول صح! هنعرض إيميله فوق في الهيدر
+                document.getElementById('userDisplay').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email}`;
+            } else {
+                // يوزر مش مسجل ودخل تسلل عن طريق الرابط؟ اطردددده!
+                window.location.href = 'index.html';
+            }
+        });
+
+        // دالة تسجيل الخروج
+        window.handleLogout = function() {
+            signOut(auth).then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        // دالة الدخول وتفاصيل السيرفر (العركة اللي جاية)
+        window.goToServer = function(serverId) {
+            alert("جاهز يا معلم؟ السيرفر ده هيدخلنا على صفحة التحكم الداخلية بتاعته: " + serverId);
+            // هنا بعدين هنخليه يفتح صفحة التحكم الفردية للسيرفر
+        }
+    </script>
+</body>
+</html>
