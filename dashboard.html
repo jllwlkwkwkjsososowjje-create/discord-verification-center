@@ -421,9 +421,11 @@
         </div>
     </div>
 
-    <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // [تحديث]: استدعاء موديول قاعدة البيانات لجلب الـ Username 🛰️
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
@@ -437,6 +439,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getDatabase(app); // تشغيل قاعدة البيانات السحابية
 
         // قائمة السيرفرات الوهمية الذكية لتحويلها لعشوائية الأيقونات
         const mockServers = [
@@ -448,18 +451,94 @@
         // مصفوفة الأيقونات العشوائية المطلوبين 🎲
         const randomIcons = ["fab fa-discord", "fas fa-robot"];
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('accEmail').innerText = user.email;
-                document.getElementById('accName').innerText = user.displayName || "مستخدم المستقبل";
-                document.getElementById('welcomeUser').innerText = `أهلاً بك، ${user.displayName || 'يا بطل'} في سحابة المستقبل 👋`;
-                document.getElementById('userIdDisplay').innerText = user.uid; // الـ ID الفريد
-                
-                renderServers();
-            } else {
-                window.location.href = 'index.html';
+        // ==========================================
+        // 🌐 [1] فحص مصيدة توكن ديسكورد (Discord OAuth2)
+        // ==========================================
+        function checkDiscordLogin() {
+            const hash = window.location.hash;
+            if (hash.includes("access_token")) {
+                const params = new URLSearchParams(hash.substring(1));
+                const accessToken = params.get("access_token");
+
+                // سحب بيانات المستخدم فوراً من ديسكورد نيتورك 📡
+                fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                })
+                .then(res => res.json())
+                .then(discordUser => {
+                    if (discordUser.id) {
+                        const finalName = discordUser.global_name || discordUser.username;
+                        const finalUser = discordUser.username;
+
+                        // حقن البيانات في الهيدر واللوحة فوري
+                        document.getElementById('accEmail').innerText = discordUser.email || "Discord Account";
+                        document.getElementById('accName').innerText = `${finalName} (@${finalUser})`;
+                        document.getElementById('welcomeUser').innerText = `أهلاً بك، ${finalName} في سحابة المستقبل 👋`;
+                        document.getElementById('userIdDisplay').innerText = discordUser.id;
+
+                        // تعبئة خانات الإعدادات بشكل تلقائي
+                        document.getElementById('setDisplayName').value = finalName;
+                        document.getElementById('setUsername').value = finalUser;
+                        document.getElementById('setEmail').value = discordUser.email || "";
+
+                        renderServers();
+                        
+                        // تنظيف الرابط للحفاظ على المظهر السينمائي ومنع كشف التوكن
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                })
+                .catch(err => {
+                    console.error("Discord Login Error:", err);
+                    window.location.href = 'index.html';
+                });
+                return true; 
             }
-        });
+            return false;
+        }
+
+        // ==========================================
+        // 📩 [2] حماية اللوحة وفحص مستخدمي الفايربيز (جوجل أو إيميل)
+        // ==========================================
+        if (!checkDiscordLogin()) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    document.getElementById('accEmail').innerText = user.email;
+                    document.getElementById('userIdDisplay').innerText = user.uid;
+                    
+                    // قيم افتراضية لداخل شاشة الإعدادات
+                    document.getElementById('setEmail').value = user.email;
+
+                    try {
+                        // سحب اليوزر نيم والاسم السحابي المحصن من الـ Database 🕵️‍♂️🔒
+                        const userRef = ref(db, 'users/' + user.uid);
+                        const snapshot = await get(userRef);
+
+                        if (snapshot.exists()) {
+                            const userData = snapshot.val();
+                            const showTitle = `${userData.displayName} (@${userData.username})`;
+                            
+                            document.getElementById('accName').innerText = showTitle;
+                            document.getElementById('welcomeUser').innerText = `أهلاً بك، ${userData.displayName} في سحابة المستقبل 👋`;
+                            
+                            // تعبئة حقول الإعدادات بالبيانات الحقيقية المستدعاة
+                            document.getElementById('setDisplayName').value = userData.displayName;
+                            document.getElementById('setUsername').value = userData.username;
+                        } else {
+                            // حماية احتياطية في حال تسجيل جوجل لأول مرة قبل اكتمال السنك
+                            document.getElementById('accName').innerText = user.displayName || "مستخدم المستقبل";
+                            document.getElementById('welcomeUser').innerText = `أهلاً بك، ${user.displayName || 'يا بطل'} في سحابة المستقبل 👋`;
+                            document.getElementById('setDisplayName').value = user.displayName || "";
+                        }
+                    } catch (error) {
+                        document.getElementById('accName').innerText = user.displayName || "مستخدم المستقبل";
+                    }
+                    
+                    renderServers();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
 
         // رندر السيرفرات بأيقونات عشوائية تماماً 🎲🤖
         function renderServers() {
@@ -467,7 +546,6 @@
             container.innerHTML = "";
             
             mockServers.forEach(srv => {
-                // دالة اختيار عشوائي للأيقونة
                 const randomIcon = randomIcons[Math.floor(Math.random() * randomIcons.length)];
                 const statusClass = srv.online ? 'status-online' : 'status-offline';
                 const statusText = srv.online ? 'شغال 24/7' : 'متوقف';
@@ -498,7 +576,7 @@
         // فتح وإغلاق شاشة الإعدادات
         window.openSettings = function() {
             document.getElementById('settingsModal').style.display = 'flex';
-            toggleSidebar(); // نقفل السايدبار عشان نركز في الإعدادات
+            toggleSidebar(); 
         };
         window.closeSettings = function() {
             document.getElementById('settingsModal').style.display = 'none';
@@ -525,8 +603,15 @@
             closeSettings();
         };
 
+        // [تحديث تسجيل الخروج]: تنظيف الـ LocalStorage والتوجيه الصحيح
         window.handleLogout = function() {
-            signOut(auth).then(() => { window.location.href = 'index.html'; });
+            signOut(auth).then(() => { 
+                localStorage.removeItem('accountVerified');
+                localStorage.removeItem('verifiedEmail');
+                window.location.href = 'index.html'; 
+            }).catch(() => {
+                window.location.href = 'index.html'; 
+            });
         };
     </script>
 </body>
