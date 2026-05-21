@@ -755,7 +755,8 @@ const translations = {
     </script>
 
 <script type="module">
-    // [الدمج الاحترافي]: سطر واحد فيه كل الداتا من غير تكرار 🚀
+    // [الدمج الاحترافي الحقيقي]: سطر واحد نظيف بدون أي تكرار يوقف الصفحة 🚀
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, fetchSignInMethodsForEmail, updateProfile, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     
@@ -771,55 +772,51 @@ const translations = {
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getDatabase(app); // تشغيل قاعدة البيانات السحابية
-    const googleProvider = new GoogleAuthProvider(); // محرك تشغيل جوجل
+    const db = getDatabase(app); 
+    const googleProvider = new GoogleAuthProvider(); 
 
     // [تكتيك التوجيه التلقائي]: لو مسجل دخول، طيران على اللوحة ومينفعش يقعد هنا ✈️🔒
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            window.location.href = 'dashboard.html';
+            // للتأكد إننا مش بنوجهه لو هو لسه راجع من رابط التحقق بالإيميل
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('action')) {
+                window.location.href = 'dashboard.html';
+            }
         }
     });
 
     // ==========================================
     // 🌐 [1] نظام تسجيل الدخول بواسطة جـوجـل (Google OAuth)
     // ==========================================
-    // 1. دالة تسجيل الدخول بجوجل (التحويل المباشر بدون بوب-أب بايز)
     window.handleGoogleLogin = function() {
         const t = translations[currentLang];
-        showCyberToast(t.oauthGoogle); // إشعار جاري الاتصال بجوجل
+        showCyberToast(t.oauthGoogle); 
 
-        // التوجيه التلقائي المضمون على الموبايل
+        // التوجيه التلقائي المضمون على الموبايل لمنع الحظر
         signInWithRedirect(auth, googleProvider);
     };
 
-    // 2. [تكتيك لقط البيانات]: كود بيشتغل أوتوماتيك أول ما الصفحة تعمل लोड عشان يستقبل اليوزر اللي راجع من جوجل
-    import { getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
+    // لقط البيانات أوتوماتيك أول ما الصفحة تحمل للشخص اللي راجع من جوجل
     getRedirectResult(auth)
         .then(async (result) => {
-            // لو فيه يوزر راجع بنجاح من جوجل
             if (result && result.user) {
                 const user = result.user;
                 const t = translations[currentLang];
                 
-                // تنظيف وصناعة يوزر نيم تلقائي مشتق من الإيميل
                 const baseUsername = user.email.split('@')[0].replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
                 const randomId = Math.random().toString(36).substring(2, 6);
                 const finalUsername = `${baseUsername}_${randomId}`;
 
-                // فحص هل المستخدم مسجل عندنا في الـ Realtime Database من قبل؟
                 const userRef = ref(db, 'users/' + user.uid);
                 const userSnapshot = await get(userRef);
 
                 if (!userSnapshot.exists()) {
-                    // حجز اليوزر نيم سحابياً فوراً 🔒
                     await set(ref(db, 'takenUsernames/' + finalUsername), {
                         ownerEmail: user.email,
                         uid: user.uid
                     });
 
-                    // حفظ بروفايله بالكامل في السيرفر
                     await set(userRef, {
                         displayName: user.displayName,
                         username: finalUsername,
@@ -840,12 +837,12 @@ const translations = {
     // ==========================================
     // 🌐 [2] نظام تسجيل الدخول بواسطة ديـسـكـورد (Discord OAuth2)
     // ==========================================
-    window.handleDiscordLogin = function() {
+    // [تعديل اسم الدالة]: خليتها تطابق الـ HTML بالظبط عشان تشتغل فوراً ⚡
+    window.loginWithDiscord = function() {
         const t = translations[currentLang];
         showCyberToast(t.oauthDiscord);
 
-        // هنا بنوجه اليوزر لرابط بورتال الديسكورد الرسمي بتاعك عشان يوافق على الصلاحيات ويرجع للـ Dashboard
-        const clientId = "1505649534473339102"; // استبدل هذا برقم الـ Client ID الخاص ببوتك مستقبلاً
+        const clientId = "1505649534473339102"; 
         const redirectUri = encodeURIComponent("https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/dashboard.html");
         
         const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=identify%20email`;
@@ -863,25 +860,19 @@ const translations = {
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
         const confirmPassword = document.getElementById('regConfirmPassword').value;
-        
-        // الخانات المحدثة (الاسم الظاهر والـ Username الفريد) 👤
         const displayName = document.getElementById('regName') ? document.getElementById('regName').value : 'User';
-        const username = document.getElementById('regUser').value.trim().toLowerCase(); // تنظيف الاسم
+        const username = document.getElementById('regUser').value.trim().toLowerCase(); 
         
-        // [فحص 1] تطابق كلمات المرور
         if (password !== confirmPassword) {
             showCyberToast(t.passMismatch);
             return;
         }
 
         const submitBtn = e.target.querySelector('button[type="submit"]');
-        
-        // تحويل الزر لحالة الفحص والتحقق من السيرفر
         submitBtn.innerText = currentLang === 'ar' ? "جاري فحص البيانات..." : "Checking data...";
         submitBtn.disabled = true;
 
         try {
-            // [فحص 2] الفحص السحابي الفوري لليوزر نيم 🕵️‍♂️🔒
             const usernameRef = ref(db, 'takenUsernames/' + username);
             const usernameSnapshot = await get(usernameRef);
 
@@ -890,19 +881,17 @@ const translations = {
                 showCyberToast(errorMsg);
                 submitBtn.innerText = t.btnRegSubmit;
                 submitBtn.disabled = false;
-                return; // وقف العملية فوراً ولا ترسل أي شيء!
+                return; 
             }
 
-            // [فحص 3] الفحص السحابي الفوري للإيميل 🛰️
             const signInMethods = await fetchSignInMethodsForEmail(auth, email);
             if (signInMethods.length > 0) {
                 showCyberToast(t.alreadyActivated);
                 submitBtn.innerText = t.btnRegSubmit;
                 submitBtn.disabled = false;
-                return; // وقف العملية فوراً!
+                return; 
             }
 
-            // إذا كانت البيانات كلها نظيفة وغير مسجلة، نبدأ عملية التشفير والإرسال 🚀
             submitBtn.innerText = t.sendingEmail;
 
             const timestamp = Date.now(); 
@@ -912,12 +901,11 @@ const translations = {
             const encodedDisplay = encodeURIComponent(displayName);
             const encodedUser = encodeURIComponent(username);
             
-            // الرابط السينمائي متلغم بكل البيانات الجديدة
-            const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&name=${encodedDisplay}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
+            const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/index.html?action=verify&email=${email}&key=${encodedPass}&name=${encodedDisplay}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
 
             const templateParams = {
                 user_email: email,
-                user_name: displayName, // نبعت الاسم الظاهر في إيميل الترحيب
+                user_name: displayName, 
                 verification_link: verificationLink, 
                 reply_to: "support@thefuture.com"
             };
@@ -935,7 +923,6 @@ const translations = {
                 });
 
         } catch (error) {
-            // حماية إضافية لو الفايربيز رفض الفحص بسبب أن الحساب مستخدم بالفعل
             if (error.code === 'auth/email-already-in-use' || error.message.includes('already')) {
                 showCyberToast(t.alreadyActivated);
             } else {
@@ -946,7 +933,9 @@ const translations = {
         }
     };
 
-    // [4] فحص طابع الوقت والتوكنز التلقائي وحجز البيانات عند الضغط على الرابط من الإيميل
+    // ==========================================
+    // 📩 [4] فحص الرابط القادم من الإيميل وتفعيله سحابياً
+    // ==========================================
     function checkVerificationRoute() {
         const t = translations[currentLang];
         const urlParams = new URLSearchParams(window.location.search);
@@ -978,17 +967,14 @@ const translations = {
                 .then((userCredential) => {
                     const firebaseUser = userCredential.user;
 
-                    // حفظ الاسم الظاهر جوه الـ Profile بتاع الفايربيز 👤
                     updateProfile(firebaseUser, {
                         displayName: decodedDisplay
                     }).then(async () => {
-                        // [قفل الخرسانة]: حجز اليوزر نيم فوراً في قاعدة البيانات السحابية عشان محدش ياخده 🔒
                         await set(ref(db, 'takenUsernames/' + decodedUser), {
                             ownerEmail: email,
                             uid: firebaseUser.uid
                         });
 
-                        // حفظ إضافي لمعلومات المستخدم تحت الـ UID بتاعه للتحكم مستقبلاً
                         await set(ref(db, 'users/' + firebaseUser.uid), {
                             displayName: decodedDisplay,
                             username: decodedUser,
@@ -1016,7 +1002,9 @@ const translations = {
 
     window.addEventListener('load', checkVerificationRoute);
 
-    // [5] دالة تسجيل الدخول والتوست المطابق للغات والتوجيه للـ Dashboard
+    // ==========================================
+    // 📩 [5] دالة تسجيل الدخول العادي بالنموذج
+    // ==========================================
     window.handleLoginSubmit = function(e) {
         e.preventDefault();
         const t = translations[currentLang];
