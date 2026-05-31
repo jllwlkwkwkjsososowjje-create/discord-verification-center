@@ -848,7 +848,6 @@
         function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
     </script>
 
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -945,7 +944,7 @@
     }
 
     // ==========================================
-    // 📩 [3] الربط البرمجي المباشر لإنشاء الحساب (إرسال فوري بدون فحص مسبق معطل)
+    // 📩 [3] الربط البرمجي المباشر لإنشاء الحساب (تحديث الـ EmailJS والمسار لـ verify.html)
     // ==========================================
     const regForm = document.getElementById('registerForm');
     if (regForm) {
@@ -976,6 +975,7 @@
                 const encodedDisplay = encodeURIComponent(displayName);
                 const encodedUser = encodeURIComponent(username);
                 
+                // 🚀 حل مشكلة التوجيه: تعديل المسار ليفتح صفحة التفعيل المخصصة verify.html مباشرة
                 const verificationLink = `https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/verify.html?action=verify&email=${email}&key=${encodedPass}&name=${encodedDisplay}&user=${encodedUser}&time=${timestamp}&token=${randomToken}`;
 
                 const templateParams = {
@@ -985,7 +985,11 @@
                     reply_to: "support@thefuture.com"
                 };
                 
-                emailjs.send("service_z01ptyg", "template_mbb5nh5", templateParams)
+                // تفعيل حساب EmailJS الجديد الخاص بك باستخدام الـ API Key المرفق
+                emailjs.init("_cfT4moFWEq7ukC2e");
+                
+                // الإرسال عبر السيرفس والتمبلت الجدد
+                emailjs.send("service_q8fnlxx", "template_ca3jce8", templateParams)
                     .then(function() {
                         showCyberToast(t.emailSuccess.replace("{email}", email));
                         submitBtn.innerText = t.btnRegSubmit;
@@ -1010,9 +1014,7 @@
     // ==========================================
     // 🌐 [4] فحص رابط الإيميل القادم وتفعيله (احتياطي في حال تم طلبه من نفس الصفحة)
     // ==========================================
-    window.checkVerificationRoute = function() {
-        // ... (يمكن تركه فارغاً أو كما هو لأن الشغل كله تم نقله لصفحة التفعيل المخصصة)
-    }
+    window.checkVerificationRoute = function() { }
 
     // ==========================================
     // 🌐 [5] الربط البرمجي المباشر لتسجيل الدخول العادي
