@@ -119,6 +119,14 @@
         }
         .sidebar-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
 
+        /* 🔄 أنيميشن السهم الخاص بالمطورين */
+        .sidebar-item .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        .sidebar-item.open .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
         .sidebar-dropdown {
             width: 100%;
             background: rgba(0,0,0,0.4);
@@ -341,20 +349,42 @@
         .close-btn { position: absolute; top: 12px; right: 18px; font-size: 1.2rem; color: #64748b; cursor: pointer; }
         .auth-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 20px; text-align: center; color: #00bcd4; }
 
-        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group { margin-bottom: 15px; text-align: left; position: relative; }
         html[dir="rtl"] .input-group { text-align: right; }
         .input-group label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 5px; }
         
         .input-group input {
             width: 100%;
             padding: 10px;
+            padding-right: 40px; /* مسافة مخصصة لأيقونة العين */
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 6px;
             color: white;
             outline: none;
         }
+        html[dir="rtl"] .input-group input {
+            padding-right: 10px;
+            padding-left: 40px;
+        }
         .input-group input:focus { border-color: #00bcd4; }
+
+        /* 👁️ ستايل أيقونة العين السحرية المتحركة الافتراضي */
+        .password-toggle-icon {
+            position: absolute;
+            bottom: 11px;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 1rem;
+            transition: color 0.3s ease, transform 0.2s ease;
+            z-index: 10;
+        }
+        /* اللون اللبني الجذاب والواضح عند التفعيل */
+        .password-toggle-icon.active-cyan {
+            color: #00bcd4 !important;
+        }
+        html[dir="ltr"] .password-toggle-icon { right: 15px; }
+        html[dir="rtl"] .password-toggle-icon { left: 15px; }
 
         .captcha-box {
             background: rgba(255,255,255,0.01);
@@ -441,7 +471,7 @@
         </div>
 
         <div class="sidebar-content">
-            <div class="sidebar-item" onclick="toggleDevelopers()">
+            <div class="sidebar-item" id="devMenuTitle" onclick="toggleDevelopers()">
                 <i class="fa-solid fa-code"></i> 
                 <span id="sideDevs">Developers</span> 
                 <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; margin-left: auto; margin-right: auto;"></i>
@@ -513,6 +543,7 @@
                 <div class="input-group">
                     <label id="lblLogPass">Password</label>
                     <input type="password" id="logPassword" required placeholder="••••••••">
+                    <i class="fa-solid fa-eye-slash password-toggle-icon" onclick="toggleLoginPasswordVisibility(this)"></i>
                 </div>
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheckLogin" required>
@@ -553,12 +584,13 @@
                 <div class="input-group">
                     <label id="lblRegPass">Password</label>
                     <input type="password" id="regPassword" required placeholder="••••••••">
+                    <i class="fa-solid fa-eye-slash password-toggle-icon" id="unifiedRegisterEye" onclick="toggleRegisterPasswordFields(this)"></i>
                 </div>
 
                 <div class="input-group">
                     <label id="lblRegConfirm">Confirm Password</label>
                     <input type="password" id="regConfirmPassword" required placeholder="••••••••">
-                </div>
+                    </div>
 
                 <div class="captcha-box">
                     <input type="checkbox" id="captchaCheckReg" required>
@@ -577,7 +609,7 @@
 
         const translations = {
             en: {
-                soonText: "SOON",
+                soonText: "Log in first",
                 oauthGoogle: "Connecting to Google...",
                 oauthDiscord: "Connecting to Discord...",
                 passMismatch: "❌ Password dynamic mismatch! Please retype password correctly.",
@@ -623,7 +655,7 @@
                 switchLogBox: 'Already have an account? <span onclick="openAuthModal(\'login\')">Login</span>'
             },
             ar: {
-                soonText: "قريباً جداً",
+                soonText: "قم بتسجيل الدخول أولاً",
                 oauthGoogle: "جاري الاتصال بحساب جوجل...",
                 oauthDiscord: "جاري الاتصال بحساب ديسكورد...",
                 passMismatch: "❌ كلمتا المرور غير متطابقتين! برجاء التأكد من كتابتهما بشكل متطابق.",
@@ -743,7 +775,51 @@
 
         function toggleDevelopers() {
             const devDropdown = document.getElementById('devDropdown');
-            devDropdown.style.display = devDropdown.style.display === 'block' ? 'none' : 'block';
+            const devMenuTitle = document.getElementById('devMenuTitle');
+            
+            if (devDropdown.style.display === 'block') {
+                devDropdown.style.display = 'none';
+                devMenuTitle.classList.remove('open');
+            } else {
+                devDropdown.style.display = 'block';
+                devMenuTitle.classList.add('open');
+            }
+        }
+
+        /* 👁️ [تعديل] دالة العين لصفحة تسجيل الدخول (تبديل اللون لبني/رمادي بدون أنيميشن) */
+        function toggleLoginPasswordVisibility(iconElement) {
+            const passwordInput = document.getElementById('logPassword');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                iconElement.classList.remove('fa-eye-slash');
+                iconElement.classList.add('fa-eye');
+                iconElement.classList.add('active-cyan'); // قلب اللون لبني
+            } else {
+                passwordInput.type = 'password';
+                iconElement.classList.remove('fa-eye');
+                iconElement.classList.add('fa-eye-slash');
+                iconElement.classList.remove('active-cyan'); // رجوع للرمادي الطبيعي
+            }
+        }
+
+        /* 👁️ [تعديل جديد] دالة العين الموحدة لصفحة إنشاء حساب (تتحكم في الحقلين معاً واللون لبني/رمادي) */
+        function toggleRegisterPasswordFields(iconElement) {
+            const passInput = document.getElementById('regPassword');
+            const confirmInput = document.getElementById('regConfirmPassword');
+            
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                confirmInput.type = 'text';
+                iconElement.classList.remove('fa-eye-slash');
+                iconElement.classList.add('fa-eye');
+                iconElement.classList.add('active-cyan'); // قلب اللون لبني عند التفعيل
+            } else {
+                passInput.type = 'password';
+                confirmInput.type = 'password';
+                iconElement.classList.remove('fa-eye');
+                iconElement.classList.add('fa-eye-slash');
+                iconElement.classList.remove('active-cyan'); // رجوع للرمادي الطبيعي عند الإطفاء
+            }
         }
 
         function openAuthModal(mode) {
@@ -754,11 +830,24 @@
             } else {
                 document.getElementById('loginModal').style.display = 'none';
                 document.getElementById('registerModal').style.display = 'block';
+                
+                // تصفير حالة العين عند فتح المودال عشان ترجع افتراضية مقفولة ورمادي
+                const regEye = document.getElementById('unifiedRegisterEye');
+                const passInput = document.getElementById('regPassword');
+                const confirmInput = document.getElementById('regConfirmPassword');
+                if(regEye && passInput && confirmInput) {
+                    passInput.type = 'password';
+                    confirmInput.type = 'password';
+                    regEye.classList.remove('fa-eye');
+                    regEye.classList.add('fa-eye-slash');
+                    regEye.classList.remove('active-cyan');
+                }
             }
         }
 
         function closeAuthModal() { document.getElementById('authOverlay').classList.remove('active'); }
     </script>
+
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -847,7 +936,7 @@
             const t = translations[currentLang];
             showCyberToast(t.oauthDiscord);
 
-            const clientId = "1505649534473339102"; 
+            const clientId = "1493381430019883028"; 
             const redirectUri = encodeURIComponent("https://jllwlkwkwkjsososowjje-create.github.io/discord-verification-center/dashboard.html");
             const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=identify%20email`;
             
@@ -856,7 +945,7 @@
     }
 
     // ==========================================
-    // 📩 [3] الربط البرمجي المباشر والمحمي لإنشاء الحساب (الحل الجذري)
+    // 📩 [3] الربط البرمجي المباشر لإنشاء الحساب (إرسال فوري بدون فحص مسبق معطل)
     // ==========================================
     const regForm = document.getElementById('registerForm');
     if (regForm) {
@@ -868,7 +957,7 @@
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const displayName = document.getElementById('regName') ? document.getElementById('regName').value.trim() : 'User';
+            const displayName = document.getElementById('regName')?.value?.trim() || 'User';
             const username = document.getElementById('regUser').value.trim().toLowerCase(); 
             
             if (password !== confirmPassword) {
@@ -876,48 +965,11 @@
                 return;
             }
 
-            // تجميد الزرار للتحقق
-            submitBtn.innerText = currentLang === 'ar' ? "جاري فحص البيانات..." : "Checking data...";
+            // قفل الزرار لمنع تكرار الضغط أثناء الإرسال
+            submitBtn.innerText = t.sendingEmail || "Sending verification mail...";
             submitBtn.style.pointerEvents = "none";
 
             try {
-                // [فحص 1] اليوزر نيم سحابياً
-                const usernameRef = ref(db, 'takenUsernames/' + username);
-                const usernameSnapshot = await get(usernameRef);
-
-                if (usernameSnapshot.exists()) {
-                    const errorMsg = currentLang === 'ar' ? "❌ اسم المستخدم هذا مأخوذ بالفعل! اختر اسماً آخر." : "❌ Username is already taken! Choose another.";
-                    showCyberToast(errorMsg);
-                    submitBtn.innerText = t.btnRegSubmit;
-                    submitBtn.style.pointerEvents = "auto";
-                    return; 
-                }
-
-                // [فحص 2] فحص تكرار الإيميل
-                const usersRef = ref(db, 'users');
-                const usersSnapshot = await get(usersRef);
-                let emailExists = false;
-
-                if (usersSnapshot.exists()) {
-                    const usersData = usersSnapshot.val();
-                    for (let userId in usersData) {
-                        if (usersData[userId].email && usersData[userId].email.toLowerCase() === email) {
-                            emailExists = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (emailExists) {
-                    showCyberToast(t.alreadyActivated);
-                    submitBtn.innerText = t.btnRegSubmit;
-                    submitBtn.style.pointerEvents = "auto";
-                    return; 
-                }
-
-                // الانتقال لمرحلة الإرسال
-                submitBtn.innerText = t.sendingEmail;
-
                 const timestamp = Date.now(); 
                 const randomToken = Math.random().toString(36).substring(2, 10); 
                 const encodedPass = btoa(password); 
@@ -947,9 +999,8 @@
                     });
 
             } catch (error) {
-                console.error("Database Error Managed:", error);
-                showCyberToast(t.activationError + error.message);
-                // فك حتمي للتعليقة لو حدث عطل مفاجئ
+                console.error("Form Process Error:", error);
+                showCyberToast(error.message);
                 submitBtn.innerText = t.btnRegSubmit;
                 submitBtn.style.pointerEvents = "auto";
             }
@@ -957,81 +1008,14 @@
     }
 
     // ==========================================
-    // 📩 [4] فحص رابط الإيميل القادم وتفعيله
+    // 🌐 [4] فحص رابط الإيميل القادم وتفعيله (احتياطي في حال تم طلبه من نفس الصفحة)
     // ==========================================
     window.checkVerificationRoute = function() {
-        const t = translations[currentLang];
-        const urlParams = new URLSearchParams(window.location.search);
-        const action = urlParams.get('action');
-        
-        if (action !== 'verify') {
-            return; 
-        }
-
-        const email = urlParams.get('email');
-        const key = urlParams.get('key');
-        const displayName = urlParams.get('name');
-        const user = urlParams.get('user');
-        const linkTime = urlParams.get('time'); 
-
-        if (email && key && linkTime) {
-            const currentTime = Date.now();
-            const timeDifference = currentTime - parseInt(linkTime);
-            const tenMinutesInMs = 10 * 60 * 1000;
-
-            if (timeDifference > tenMinutesInMs) {
-                showCyberToast(t.linkExpired);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                openAuthModal('register'); 
-                return;
-            }
-
-            showCyberToast(t.validatingToken);
-            const decodedPassword = atob(key);
-            const decodedDisplay = decodeURIComponent(displayName || 'User');
-            const decodedUser = decodeURIComponent(user || 'user123').trim().toLowerCase();
-
-            createUserWithEmailAndPassword(auth, email, decodedPassword)
-                .then((userCredential) => {
-                    const firebaseUser = userCredential.user;
-
-                    updateProfile(firebaseUser, {
-                        displayName: decodedDisplay
-                    }).then(async () => {
-                        await set(ref(db, 'takenUsernames/' + decodedUser), {
-                            ownerEmail: email,
-                            uid: firebaseUser.uid
-                        });
-
-                        await set(ref(db, 'users/' + firebaseUser.uid), {
-                            displayName: decodedDisplay,
-                            username: decodedUser,
-                            email: email,
-                            createdAt: Date.now()
-                        });
-
-                        localStorage.setItem('accountVerified', 'true');
-                        localStorage.setItem('verifiedEmail', 'true');
-                        showCyberToast(t.activationSuccess.replace("{user}", decodedDisplay));
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        openAuthModal('login');
-                    });
-                })
-                .catch((error) => {
-                    if (error.code === 'auth/email-already-in-use') {
-                        showCyberToast(t.alreadyActivated);
-                    } else {
-                        showCyberToast(t.activationError + error.message);
-                    }
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                });
-        }
+        // ... (يمكن تركه فارغاً أو كما هو لأن الشغل كله تم نقله لصفحة التفعيل المخصصة)
     }
 
-    window.addEventListener('load', window.checkVerificationRoute);
-
     // ==========================================
-    // 📩 [5] الربط البرمجي المباشر لتسجيل الدخول العادي
+    // 🌐 [5] الربط البرمجي المباشر لتسجيل الدخول العادي
     // ==========================================
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
