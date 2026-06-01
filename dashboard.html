@@ -121,9 +121,9 @@
         .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r); cursor: pointer; transition: all .2s; }
         .menu-item:hover { background: var(--bg-hover); color: var(--accent); }
         
-        /* 🛑 زرار تسجيل الخروج باللون الأحمر الفخم */
+        /* 🛑 زرار تسجيل الخروج باللون الأحمر النيون الفخم وجذاب */
         .menu-item.danger { color: var(--text-danger); border: 1px solid rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.05); }
-        .menu-item.danger:hover { background: var(--bg-danger); color: #ff6b6b; border-color: #ef4444; }
+        .menu-item.danger:hover { background: var(--bg-danger); color: #ff6b6b; border-color: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.2); }
         
         .item-icon { width: 26px; height: 26px; border-radius: 6px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 15px; }
         .menu-item:hover .item-icon { color: inherit; }
@@ -164,30 +164,48 @@
         .server-info-item span:last-child { color: #fff; font-weight: 600; }
         .btn-manage { width: 100%; padding: 10px; border-radius: 8px; background: var(--accent); color: #000; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* ── Modals & Eye Password Styling ── */
+        /* ── Modals & Scroll Adjustment ── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 2, 10, 0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; padding: 16px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .settings-modal { background: #0b071e; border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; transform: scale(0.95); transition: 0.3s; }
+        
+        /* ⚙️ جعل كارت المودال مرن لمنع نزول زرار التأكيد تحت الشاشة ومناسب للموبايل */
+        .settings-modal { 
+            background: #0b071e; 
+            border: 1px solid rgba(0, 243, 255, 0.2); 
+            border-radius: 16px; 
+            padding: 24px; 
+            width: 100%; 
+            max-width: 440px; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            transform: scale(0.95); 
+            transition: 0.3s; 
+            display: flex;
+            flex-direction: column;
+        }
         .modal-overlay.active .settings-modal { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; flex-shrink: 0; }
         .modal-header h3 { font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
         .close-modal-btn { color: #64748b; font-size: 18px; display: flex; align-items: center; }
         .close-modal-btn:hover { color: #ff0055; }
+
+        .modal-body-form { display: flex; flex-direction: column; flex-grow: 1; }
 
         .form-group { margin-bottom: 14px; position: relative; }
         .form-group label { display: block; font-size: 11px; color: #64748b; margin-bottom: 5px; font-weight: 600; }
         .form-group input { width: 100%; padding: 11px 12px; background: rgba(5, 3, 10, 0.5); border: 1px solid var(--border); border-radius: 6px; color: #fff; font-size: 13px; }
         .form-group input:focus { border-color: var(--accent); outline: none; }
         
-        /* 👁️ نظام كاشف الباسورد المطور */
+        /* 👁️ تصميم غلاف الباسورد لإضافة العين الواحدة المشتركة بدقة */
         .password-wrapper { position: relative; display: flex; align-items: center; }
         .password-wrapper input { padding-right: 40px; }
         html[dir="rtl"] .password-wrapper input { padding-right: 12px; padding-left: 40px; }
-        .eye-btn { position: absolute; right: 12px; color: var(--text-muted); font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; }
+        .eye-btn { position: absolute; right: 12px; color: var(--text-muted); font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%; top: 0; z-index: 5; }
         html[dir="rtl"] .eye-btn { right: auto; left: 12px; }
         .eye-btn:hover { color: var(--accent); }
 
-        .btn-confirm { width: 100%; padding: 11px; background: var(--accent); color: #000; border-radius: 6px; font-weight: 700; font-size: 14px; margin-top: 12px; display: none; box-shadow: 0 0 15px var(--accent-glow); transition: 0.2s; }
+        /* زرار الحفظ المؤكد ظهوره بالكامل أسفل الحقول */
+        .btn-confirm { width: 100%; padding: 12px; background: var(--accent); color: #000; border-radius: 6px; font-weight: 700; font-size: 14px; margin-top: 12px; display: none; box-shadow: 0 0 15px var(--accent-glow); transition: 0.2s; flex-shrink: 0; }
         .btn-confirm.show-btn { display: block; }
 
         .dev-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
@@ -311,28 +329,29 @@
                 <h3><i class="ri-shield-user-line"></i> <span id="txtModalTitle">Profile Settings</span></h3>
                 <button class="close-modal-btn" onclick="closeSettingsModal()"><i class="ri-close-line"></i></button>
             </div>
-            <div class="form-group"><label id="lblFormDisplay">Display Name</label><input type="text" id="modalDisplayName" disabled></div>
-            <div class="form-group"><label id="lblFormUser">Username</label><input type="text" id="modalUsername" disabled></div>
-            <div class="form-group"><label id="lblFormEmail">Email Address</label><input type="email" id="modalEmail" disabled></div>
-            <div class="form-group"><label id="lblFormUID">Unique Identifier (UID)</label><input type="text" id="modalUID" disabled style="color: var(--accent);"></div>
-            
-            <div class="form-group">
-                <label id="lblFormNewPass">New Password</label>
-                <div class="password-wrapper">
-                    <input type="password" id="newPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
-                    <button class="eye-btn" onclick="togglePassVisibility('newPassword', 'eyeIcon1')"><i class="ri-eye-off-line" id="eyeIcon1"></i></button>
+            <div class="modal-body-form">
+                <div class="form-group"><label id="lblFormDisplay">Display Name</label><input type="text" id="modalDisplayName" disabled></div>
+                <div class="form-group"><label id="lblFormUser">Username</label><input type="text" id="modalUsername" disabled></div>
+                <div class="form-group"><label id="lblFormEmail">Email Address</label><input type="email" id="modalEmail" disabled></div>
+                <div class="form-group"><label id="lblFormUID">Unique Identifier (UID)</label><input type="text" id="modalUID" disabled style="color: var(--accent);"></div>
+                
+                <div class="form-group">
+                    <label id="lblFormNewPass">New Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="newPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
+                        <button class="eye-btn" onclick="toggleSinglePasswordSystem()"><i class="ri-eye-off-line" id="sharedEyeIcon"></i></button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label id="lblFormConfirmPass">Confirm Password</label>
-                <div class="password-wrapper">
-                    <input type="password" id="confirmPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
-                    <button class="eye-btn" onclick="togglePassVisibility('confirmPassword', 'eyeIcon2')"><i class="ri-eye-off-line" id="eyeIcon2"></i></button>
+                
+                <div class="form-group">
+                    <label id="lblFormConfirmPass">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
+                    </div>
                 </div>
+                
+                <button class="btn-confirm" id="confirmBtn" onclick="updateUserPassword()">Confirm Changes</button>
             </div>
-            
-            <button class="btn-confirm" id="confirmBtn" onclick="updateUserPassword()">Confirm Changes</button>
         </div>
     </div>
 
@@ -388,13 +407,14 @@
                 dashOpts: "خيارات لوحة التحكم", sList: "قائمة السيرفرات", sSub: "إدارة السيرفرات الفعالة", accSet: "إعدادات الحساب", accSub: "تحديث الأمان والبروفايل",
                 devHub: "مركز التطوير", devArea: "منطقة المطور", tools: "الأدوات", logout: "تسجيل الخروج",
                 mTitle: "إعدادات الحساب الشخصي", fDisp: "اسم العرض الحقيقي", fUser: "اسم المستخدم الفريد", fEmail: "البريد الإلكتروني الحالي", fUid: "المعرف الخاص الفريد (UID)", fNew: "كلمة المرور الجديدة", fConf: "تأكيد كلمة المرور", btnConf: "حفظ وتأكيد التغييرات",
-                createSrv: "أنشئ سيرفر", createSrvSub: "بناء وإطلاق خادم سحابي جديد", devTitle: "مؤسسي ومطوري الهوست"
+                createSrv: "أنشأ سيرفر", createSrvSub: "بناء وإطلاق خادم سحابي جديد", devTitle: "مؤسسي ومطوري الهوست"
             }
         };
 
         let currentLang = "en";
-        let globalCachedUser = null; // الاحتفاظ ببيانات الفايربيز لمنع مسحها عند التنقل بين اللغات
+        let globalCachedUser = null; // يحفظ بيانات المستخدم الحالية لمنع الرجوع للـ Loading عند الترجمة
 
+        // دالة تحويل اللغة الآمنة والمعدلة لمنع حذف البيانات أو الأيقونات
         window.toggleLanguage = function() {
             currentLang = currentLang === "en" ? "ar" : "en";
             const html = document.getElementById('htmlTag');
@@ -417,7 +437,7 @@
             document.getElementById('lblTools').innerText = t.tools;
             document.getElementById('lblLogout').innerText = t.logout;
             
-            // تحديث نصوص المودال بدون لمس الأيقونات لتجنب الاختفاء
+            // تحديث نصوص المودالات بدون لمس كلاسات الأيقونات الأساسية نهائياً لضمان عدم الاختفاء
             document.getElementById('txtModalTitle').innerText = t.mTitle;
             document.getElementById('txtDevModalTitle').innerText = t.devTitle;
             
@@ -447,7 +467,7 @@
                         const dispName = globalCachedUser.displayName || "Cloud User";
                         const uName = globalCachedUser.username || "user";
 
-                        // تعبئة البيانات في الهيدر والإنبوتس بالملي ومنع اختفائها
+                        // حقن البيانات الحقيقية من الفايربيز وتثبيتها بالملي في الواجهة
                         document.getElementById('topTriggerName').innerText = dispName.split(' ')[0];
                         document.getElementById('dropdownDisplayName').innerText = dispName;
                         document.getElementById('dropdownEmail').innerText = user.email;
@@ -468,7 +488,7 @@
             } else { window.location.href = 'index.html'; }
         });
 
-        // 🤖 أيقونة الروبوت والديسكورد المحدثة الفخمة
+        // 🤖 الأيقونات العشوائية المحدثة (أيقونة المعالج الذكي البديلة للروبوت القديم)
         const randomIcons = ['ri-cpu-line', 'ri-discord-fill', 'ri-instance-line'];
 
         function renderServersGrid() {
@@ -519,20 +539,24 @@
             document.querySelectorAll('.lbl-manage-btn').forEach(el => el.innerText = currentLang === 'ar' ? 'دخول وإدارة السيرفر' : 'Manage');
         }
 
-        // 👁️ دالة إظهار وإخفاء الباسورد (العين)
-        window.togglePassVisibility = function(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.className = "ri-eye-line";
+        // 👁️ نظام العين الواحدة والمشتركة المطور للتحكم في الحقلين معاً ومنع تكرار الأزرار
+        window.toggleSinglePasswordSystem = function() {
+            const passInput = document.getElementById('newPassword');
+            const confirmInput = document.getElementById('confirmPassword');
+            const eyeIcon = document.getElementById('sharedEyeIcon');
+            
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                confirmInput.type = "text";
+                eyeIcon.className = "ri-eye-line";
             } else {
-                input.type = "password";
-                icon.className = "ri-eye-off-line";
+                passInput.type = "password";
+                confirmInput.type = "password";
+                eyeIcon.className = "ri-eye-off-line";
             }
         }
 
-        // التحقق من تطابق وظهور زرار التأكيد بالأسفل
+        // التحقق الدقيق والآمن لظهور زرار التأكيد تحت الحقول مباشرة بدون خروج عن الكارد
         window.checkPasswordInputs = function() {
             const pass = document.getElementById('newPassword').value;
             const confirmPass = document.getElementById('confirmPassword').value;
