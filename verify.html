@@ -194,8 +194,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         // [تعديل 1]: استدعاء دالة تحديث البروفايل للأسماء الظاهرة 👤
         import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // [تعديل 2]: استدعاء دالة get لقراءة وفحص الداتا سحابياً 🔒
-        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        // [تعديل 2]: استدعاء دالة set لحفظ الداتا سحابياً 🔒
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
@@ -212,7 +212,7 @@
         const db = getDatabase(app); // تشغيل الـ Database
 
         function handleVerification() {
-            // 🚀 تعديل الوقت العشوائي: تم تغييره ليكون بين 3 إلى 5 ثواني فقط (من 3000 إلى 5000 مللي ثانية)
+            // الانتظار العشوائي من 3 لـ 5 ثواني
             const randomLoadingTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000;
             
             const urlParams = new URLSearchParams(window.location.search);
@@ -220,7 +220,7 @@
             const email = urlParams.get('email');
             const key = urlParams.get('key');
             
-            // استقبال المتغيرات الجديدة من الرابط 📥
+            // استقبال المتغيرات من الرابط 📥
             const displayName = urlParams.get('name');
             const user = urlParams.get('user');
             const linkTime = urlParams.get('time');
@@ -240,7 +240,7 @@
                     const timeDifference = currentTime - parseInt(linkTime);
                     const tenMinutesInMs = 10 * 60 * 1000;
 
-                    // 🛠️ [الخطوة 1]: التأكد من صلاحية الرابط (10 دقائق)
+                    // 🛠️ [فحص 1]: التأكد من صلاحية الرابط (10 دقائق)
                     if (timeDifference > tenMinutesInMs) {
                         cardIconBox.style.borderColor = "#ff3b3b";
                         cardIconBox.style.background = "rgba(255, 59, 59, 0.05)";
@@ -262,43 +262,24 @@
                     const decodedUser = decodeURIComponent(user || 'user123').trim().toLowerCase(); // تنظيف الـ Username
 
                     try {
-                        // 🛠️ [الخطوة 2]: فحص الـ Username سحابياً أولاً ومنع أي تكرار
-                        const usernameRef = ref(db, 'takenUsernames/' + decodedUser);
-                        const usernameSnapshot = await get(usernameRef);
-
-                        if (usernameSnapshot.exists()) {
-                            cardIconBox.style.borderColor = "#ff3b3b";
-                            cardIconBox.style.background = "rgba(255, 59, 59, 0.05)";
-                            cardIconBox.style.boxShadow = "0 0 20px rgba(255, 59, 59, 0.2)";
-                            cardIcon.className = "fa-solid fa-circle-xmark";
-                            cardIcon.style.color = "#ff3b3b";
-                            
-                            cardHeading.innerText = "Username Taken!";
-                            cardMessage.innerHTML = `The username <b>@${decodedUser}</b> has already been registered by someone else. Creation aborted. Please go back and pick another username.`;
-                            
-                            loader.style.opacity = '0';
-                            setTimeout(() => loader.style.display = 'none', 500);
-                            successCard.classList.add('show-card');
-                            return; 
-                        }
-
-                        // 🛠️ [الخطوة 3]: تشغيل نظام Firebase Auth لإنشاء الحساب، وفحص الإيميل بيتم تلقائياً وبسرعة فائقة هنا
+                        // 🚀 [الإنشاء الفوري عبر ميكانيزم الـ Auth التلقائي]
+                        // تم حذف استعلام الـ get المعلق تماماً لتفادي أي ثبات على شاشة التحميل
                         createUserWithEmailAndPassword(auth, email, decodedPassword)
                             .then((userCredential) => {
                                 const firebaseUser = userCredential.user;
 
-                                // [3]: تحديث اسم المستخدم الظاهر في ملفه الشخصي للترحيب به 👤🌟
+                                // تحديث البروفايل بالاسم الظاهر
                                 updateProfile(firebaseUser, {
                                     displayName: decodedDisplay
                                 }).then(async () => {
                                     
-                                    // [4]: قفل الخرسانة السحابية! حجز الـ Username فوراً لمنع التكرار
+                                    // حجز الـ Username فوراً في قاعدة البيانات لمنع تكراره
                                     await set(ref(db, 'takenUsernames/' + decodedUser), {
                                         ownerEmail: email,
                                         uid: firebaseUser.uid
                                     });
 
-                                    // [5]: إنشاء الداتا الكاملة لليوزر للتحكم بها مستقبلاً في الـ Dashboard
+                                    // إنشاء نود داتا المستخدم الكاملة
                                     await set(ref(db, 'users/' + firebaseUser.uid), {
                                         displayName: decodedDisplay,
                                         username: decodedUser,
@@ -318,7 +299,7 @@
                                 });
                             })
                             .catch((error) => {
-                                // هنا الـ Firebase بيصطاد الإيميل المتكرر فوراً وبدون أي تعليق
+                                // هنا الـ Firebase بيصطاد الإيميل المتكرر تلقائياً وبسرعة فائقة ويرمي الكارت بتاعه
                                 if (error.code === 'auth/email-already-in-use') {
                                     cardIconBox.style.borderColor = "#f59e0b";
                                     cardIconBox.style.background = "rgba(245, 158, 11, 0.05)";
@@ -346,7 +327,7 @@
                         cardIconBox.style.borderColor = "#ff3b3b";
                         cardIcon.className = "fa-solid fa-circle-xmark";
                         cardIcon.style.color = "#ff3b3b";
-                        cardHeading.innerText = "Database Checking Failed";
+                        cardHeading.innerText = "Database Writing Failed";
                         cardMessage.innerText = "Error: " + dbError.message;
                         
                         loader.style.opacity = '0';
