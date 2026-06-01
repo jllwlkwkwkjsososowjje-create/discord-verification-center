@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 
     <style>
         :root {
@@ -60,7 +60,7 @@
         }
 
         .brand { display: flex; align-items: center; gap: 8px; }
-        .brand-mark { font-size: 20px; color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .brand-mark { font-size: 22px; color: var(--accent); text-shadow: 0 0 10px var(--accent); display: flex; align-items: center; }
         .brand-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
         .brand-name span { color: var(--accent); }
 
@@ -75,7 +75,7 @@
         .icon-btn {
             position: relative; width: 36px; height: 36px; border-radius: var(--r);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .notif-dot { position: absolute; top: 8px; right: 8px; width: 6px; height: 6px; background: #ef4444; border-radius: 50%; }
@@ -94,10 +94,10 @@
             display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff;
         }
         .trigger-name { font-size: 13px; font-weight: 600; color: var(--text); }
-        .chevron { font-size: 11px; color: var(--text-muted); transition: transform .3s; }
+        .chevron { font-size: 14px; color: var(--text-muted); transition: transform .3s; display: flex; align-items: center; }
         .profile-trigger.active .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* ── الـ Dropdown وحل مشكلة أبعاد الموبايل ────────────────────────── */
+        /* ── الـ Dropdown ────────────────────────── */
         .panel-wrap { position: relative; }
         .panel {
             position: absolute; top: calc(100% + 12px); right: 0; width: 280px;
@@ -128,13 +128,13 @@
         .menu-item:hover { background: var(--bg-hover); color: var(--accent); }
         .menu-item.danger:hover { background: var(--bg-danger); color: var(--text-danger); }
         
-        .item-icon { width: 26px; height: 26px; border-radius: 6px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
+        .item-icon { width: 26px; height: 26px; border-radius: 6px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 15px; }
         .menu-item:hover .item-icon { color: inherit; }
         .item-text { flex: 1; }
         .item-label { display: block; font-size: 12px; font-weight: 600; }
         .item-sub { display: block; font-size: 10px; color: var(--text-muted); }
 
-        /* ── 🌟 أزرار السوشيال ميديا المضيئة والمتمددة (FEZ Style) ── */
+        /* ── 🌟 أزرار السوشيال ميديا المضيئة والمتمددة (FEZ Style - Remix Icons) ── */
         .social-container { margin: 20px 0 30px 0; width: 100%; display: flex; justify-content: flex-start; }
         .social-wrapper { display: flex; gap: 12px; padding: 15px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); width: 100%; overflow-x: auto; }
         
@@ -144,7 +144,7 @@
             color: #9d8dbb; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
             overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); flex-shrink: 0;
         }
-        .social-btn i { font-size: 18px; text-align: center; z-index: 2; transition: all 0.4s ease; display: inline-block; width: 20px; }
+        .social-btn i { font-size: 20px; text-align: center; z-index: 2; transition: all 0.4s ease; display: flex; align-items: center; justify-content: center; width: 20px; }
         .social-btn .btn-text { font-size: 13px; font-weight: 700; white-space: nowrap; margin-left: 10px; opacity: 0; z-index: 2; transform: translateX(-10px); transition: all 0.3s ease; }
         html[dir="rtl"] .social-btn .btn-text { margin-left: 0; margin-right: 10px; transform: translateX(10px); }
 
@@ -152,7 +152,6 @@
         .social-btn:hover .btn-text { opacity: 1; transform: translateX(0); }
         .social-btn:hover i { transform: rotate(360deg); }
 
-        /* ألوان الهوفير والإضاءة الخلفية */
         .discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4); }
         .github:hover { background: #24292e; border-color: #333; box-shadow: 0 8px 20px rgba(255,255,255,0.1); }
         .youtube:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4); }
@@ -161,7 +160,7 @@
         @media (max-width: 550px) {
             .social-wrapper { gap: 10px; padding: 10px; }
             .social-btn { height: 42px; width: 42px; padding: 12px; }
-            .social-btn i { font-size: 15px; }
+            .social-btn i { font-size: 17px; }
             .social-btn:hover { width: 120px; }
         }
 
@@ -192,7 +191,7 @@
         .modal-overlay.active .settings-modal { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .modal-header h3 { font-size: 18px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-        .close-modal-btn { color: #64748b; font-size: 16px; }
+        .close-modal-btn { color: #64748b; font-size: 18px; display: flex; align-items: center; }
         .close-modal-btn:hover { color: #ff0055; }
 
         .form-group { margin-bottom: 12px; }
@@ -205,7 +204,7 @@
         /* كروت المطورين */
         .dev-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .dev-card { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 12px; border-radius: 10px; }
-        .dev-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--accent); }
+        .dev-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--accent); }
         .dev-info h4 { font-size: 14px; color: #fff; }
         .dev-info p { font-size: 11px; color: var(--text-muted); }
     </style>
@@ -215,7 +214,7 @@
 
     <nav class="navbar">
         <a href="#" class="brand">
-            <div class="brand-mark"><i class="fas fa-server"></i></div>
+            <div class="brand-mark"><i class="ri-server-line"></i></div>
             <span class="brand-name">FUTURE<span>HOST</span></span>
         </a>
 
@@ -224,7 +223,7 @@
             <div class="panel-wrap" id="notifWrap">
                 <button class="icon-btn" aria-label="Notifications">
                     <div class="notif-dot"></div>
-                    <i class="fas fa-bell"></i>
+                    <i class="ri-notification-3-line"></i>
                 </button>
             </div>
             <div class="nav-divider"></div>
@@ -233,7 +232,7 @@
                 <button class="profile-trigger" id="profileBtn">
                     <div class="avatar" id="avatarCircle">FH</div>
                     <span class="trigger-name" id="topTriggerName">User</span>
-                    <i class="fas fa-chevron-down chevron"></i>
+                    <i class="ri-arrow-down-s-line chevron"></i>
                 </button>
 
                 <div class="panel" id="profilePanel">
@@ -249,7 +248,7 @@
                         <div class="section-label" id="lblDashboard">Dashboard Options</div>
                         
                         <div class="menu-item" onclick="switchSection('servers')">
-                            <div class="item-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="item-icon"><i class="ri-stack-line"></i></div>
                             <span class="item-text">
                                 <span class="item-label" id="lblServers">Servers List</span>
                                 <span class="item-sub" id="lblServersSub">Manage active instances</span>
@@ -257,7 +256,7 @@
                         </div>
 
                         <div class="menu-item" onclick="handleCreateServer()">
-                            <div class="item-icon" style="color: var(--accent);"><i class="fas fa-plus-circle"></i></div>
+                            <div class="item-icon" style="color: var(--accent);"><i class="ri-add-circle-line"></i></div>
                             <span class="item-text">
                                 <span class="item-label" id="lblCreateServer" style="color: var(--accent);">Create Server</span>
                                 <span class="item-sub" id="lblCreateServerSub">Deploy a brand new node</span>
@@ -265,7 +264,7 @@
                         </div>
 
                         <div class="menu-item" onclick="openSettingsModal()">
-                            <div class="item-icon"><i class="fas fa-user-cog"></i></div>
+                            <div class="item-icon"><i class="ri-user-settings-line"></i></div>
                             <span class="item-text">
                                 <span class="item-label" id="lblAccountSettings">Account Settings</span>
                                 <span class="item-sub" id="lblAccountSettingsSub">Update profile & security</span>
@@ -278,11 +277,11 @@
                     <div class="panel-section">
                         <div class="section-label" id="lblDevTools">Developer Hub</div>
                         <div class="menu-item" onclick="openDevModal()">
-                            <div class="item-icon"><i class="fas fa-code"></i></div>
+                            <div class="item-icon"><i class="ri-code-s-slash-line"></i></div>
                             <span class="item-text"><span class="item-label" id="lblDeveloper">Developer Area</span></span>
                         </div>
                         <div class="menu-item" onclick="switchSection('tools')">
-                            <div class="item-icon"><i class="fas fa-tools"></i></div>
+                            <div class="item-icon"><i class="ri-tools-line"></i></div>
                             <span class="item-text"><span class="item-label" id="lblTools">Tools</span></span>
                         </div>
                     </div>
@@ -291,7 +290,7 @@
 
                     <div class="panel-section">
                         <div class="menu-item danger" onclick="handleLogout()">
-                            <div class="item-icon"><i class="fas fa-sign-out-alt"></i></div>
+                            <div class="item-icon"><i class="ri-logout-box-r-line"></i></div>
                             <span class="item-text"><span class="item-label" id="lblLogout">Log Out</span></span>
                         </div>
                     </div>
@@ -309,19 +308,19 @@
         <div class="social-container">
             <div class="social-wrapper">
                 <a href="https://discord.gg/ymNp8uGXm5" target="_blank" class="social-btn discord">
-                    <i class="fab fa-discord"></i>
+                    <i class="ri-discord-fill"></i>
                     <span class="btn-text">Discord</span>
                 </a>
                 <a href="#" target="_blank" class="social-btn github">
-                    <i class="fab fa-github"></i>
+                    <i class="ri-github-fill"></i>
                     <span class="btn-text">GitHub</span>
                 </a>
                 <a href="#" target="_blank" class="social-btn youtube">
-                    <i class="fab fa-youtube"></i>
+                    <i class="ri-youtube-fill"></i>
                     <span class="btn-text">YouTube</span>
                 </a>
                 <a href="#" target="_blank" class="social-btn tiktok">
-                    <i class="fab fa-tiktok"></i>
+                    <i class="ri-tiktok-fill"></i>
                     <span class="btn-text">TikTok</span>
                 </a>
             </div>
@@ -334,8 +333,8 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="settings-modal">
             <div class="modal-header">
-                <h3 id="modalTitle"><i class="fas fa-user-shield"></i> Profile Settings</h3>
-                <button class="close-modal-btn" onclick="closeSettingsModal()"><i class="fas fa-times"></i></button>
+                <h3 id="modalTitle"><i class="ri-shield-user-line"></i> Profile Settings</h3>
+                <button class="close-modal-btn" onclick="closeSettingsModal()"><i class="ri-close-line"></i></button>
             </div>
             <div class="form-group"><label id="lblFormDisplay">Display Name</label><input type="text" id="modalDisplayName" disabled></div>
             <div class="form-group"><label id="lblFormUser">Username</label><input type="text" id="modalUsername" disabled></div>
@@ -350,19 +349,19 @@
     <div class="modal-overlay" id="devModal">
         <div class="settings-modal" style="max-width: 400px;">
             <div class="modal-header">
-                <h3 id="devModalTitle"><i class="fas fa-code-branch"></i> Host Founders</h3>
-                <button class="close-modal-btn" onclick="closeDevModal()"><i class="fas fa-times"></i></button>
+                <h3 id="devModalTitle"><i class="ri-git-branch-line"></i> Host Founders</h3>
+                <button class="close-modal-btn" onclick="closeDevModal()"><i class="ri-close-line"></i></button>
             </div>
             <div class="dev-grid">
                 <div class="dev-card">
-                    <div class="dev-avatar"><i class="fas fa-crown"></i></div>
+                    <div class="dev-avatar"><i class="ri-vip-crown-line"></i></div>
                     <div class="dev-info">
                         <h4>Malek</h4>
                         <p>Founder & Core Developer</p>
                     </div>
                 </div>
                 <div class="dev-card">
-                    <div class="dev-avatar"><i class="fas fa-shield-alt"></i></div>
+                    <div class="dev-avatar"><i class="ri-shield-flash-line"></i></div>
                     <div class="dev-info">
                         <h4>Waseem</h4>
                         <p>Founder & Infrastructure Architect</p>
@@ -432,8 +431,8 @@
             document.getElementById('lblDeveloper').innerText = t.devArea;
             document.getElementById('lblTools').innerText = t.tools;
             document.getElementById('lblLogout').innerText = t.logout;
-            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-user-shield"></i> ${t.mTitle}`;
-            document.getElementById('devModalTitle').innerHTML = `<i class="fas fa-code-branch"></i> ${t.devTitle}`;
+            document.getElementById('modalTitle').innerHTML = `<i class="ri-shield-user-line"></i> ${t.mTitle}`;
+            document.getElementById('devModalTitle').innerHTML = `<i class="ri-git-branch-line"></i> ${t.devTitle}`;
             document.getElementById('lblFormDisplay').innerText = t.fDisp;
             document.getElementById('lblFormUser').innerText = t.fUser;
             document.getElementById('lblFormEmail').innerText = t.fEmail;
@@ -494,9 +493,9 @@
                 card.className = 'server-card';
                 card.innerHTML = `
                     <div class="server-header">
-                        <div class="server-name"><i class="fas fa-robot" style="color: var(--accent);"></i> <span class="srv-title" data-en="${server.nameEn}" data-ar="${server.nameAr}">${server.nameEn}</span></div>
+                        <div class="server-name"><i class="ri-robot-line" style="color: var(--accent);"></i> <span class="srv-title" data-en="${server.nameEn}" data-ar="${server.nameAr}">${server.nameEn}</span></div>
                         <span class="status-badge ${server.status === 'online' ? 'status-online' : 'status-offline'}">
-                            <i class="fas fa-circle"></i> <span data-en="${server.textEn}" data-ar="${server.textAr}">${server.textEn}</span>
+                            <i class="ri-checkbox-blank-circle-fill" style="font-size: 8px;"></i> <span data-en="${server.textEn}" data-ar="${server.textAr}">${server.textEn}</span>
                         </span>
                     </div>
                     <div class="server-body">
@@ -505,7 +504,7 @@
                         <div class="server-info-item"><span class="lbl-proxy">Proxy:</span> <span data-en="${server.proxy}" data-ar="${server.proxyAr}">${server.proxy}</span></div>
                     </div>
                     <button class="btn-manage" onclick="goToServer('${server.id}')">
-                        <i class="fas fa-cog"></i> <span class="lbl-manage-btn">Manage</span>
+                        <i class="ri-settings-3-line"></i> <span class="lbl-manage-btn">Manage</span>
                     </button>
                 `;
                 container.appendChild(card);
