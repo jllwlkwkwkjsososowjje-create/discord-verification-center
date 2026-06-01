@@ -6,7 +6,7 @@
     <title>لوحة التحكم | قائمة السيرفرات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* التصميم السيبراني المظلم المتناسق */
+        /* التصميم السيبراني المظلم الفخم لـ Host The Future */
         * {
             margin: 0;
             padding: 0;
@@ -19,234 +19,520 @@
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        /* الهيدر وعناصر اللوحة */
-        header {
-            background: rgba(10, 6, 22, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 2px solid #00f3ff;
-            padding: 20px 40px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
+        /* ☰ زر القائمة العلوية للهواتف والشاشات */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(20, 15, 38, 0.9);
+            border: 1px solid #00f3ff;
             color: #00f3ff;
-            text-shadow: 0 0 10px #00f3ff;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            transition: 0.3s;
         }
 
-        .user-info {
+        .menu-toggle:hover {
+            background: #00f3ff;
+            color: #000;
+            box-shadow: 0 0 20px #00f3ff;
+        }
+
+        /* 🔮 السايد بار المطور الفخم */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(8, 5, 18, 0.95);
+            backdrop-filter: blur(15px);
+            border-left: 2px solid #00f3ff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 999;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+        }
+
+        /* قفل السايد بار في الشاشات الصغيرة وفتحه بالـ JS */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(280px);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0 !important;
+            }
+        }
+
+        /* لوجو الهوست الفخم داخل السايد بار */
+        .sidebar-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #00f3ff;
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            margin-bottom: 25px;
+        }
+
+        /* الأزرار والقائمة المتكاملة */
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .sidebar-link {
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-
-        .logout-btn {
-            background: transparent;
-            border: 1px solid #ff0055;
-            color: #ff0055;
-            padding: 8px 16px;
-            border-radius: 5px;
+            color: #a3a3c2;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        .logout-btn:hover {
-            background: #ff0055;
+        .sidebar-link i {
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            color: #00f3ff;
+            background: rgba(0, 243, 255, 0.05);
+            border-right: 4px solid #00f3ff;
+            box-shadow: inset 10px 0 15px rgba(0, 243, 255, 0.02);
+        }
+
+        /* كارت الحساب الاحترافي أسفل السايد بار */
+        .sidebar-user-card {
+            background: rgba(20, 15, 38, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            max-width: 160px;
+        }
+
+        .user-name-display {
+            font-size: 15px;
+            font-weight: 700;
             color: #fff;
-            box-shadow: 0 0 15px #ff0055;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* حاوية قائمة السيرفرات */
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .user-username-display {
+            font-size: 12px;
+            color: #00f3ff;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .settings-gear-btn {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .settings-gear-btn:hover {
+            color: #00f3ff;
+            transform: rotate(45deg);
+        }
+
+        /* 🪐 حاوية المحتوى الأساسية */
+        .main-content {
+            flex-grow: 1;
+            margin-right: 280px; /* تباعد تكتيكي عشان السايد بار */
+            padding: 40px;
+            transition: 0.4s;
+        }
+
+        /* تباعد النصوص العلوية ومنع الالتصاق */
+        .welcome-section {
+            margin-bottom: 40px;
+            margin-top: 20px;
         }
 
         .welcome-msg {
-            margin-bottom: 30px;
-            font-size: 28px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px; /* حل مشكلة لزق الكلام */
             border-right: 4px solid #00f3ff;
             padding-right: 15px;
         }
 
-        .servers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        .welcome-sub {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-right: 18px;
         }
 
-        /* كارت السيرفر السينمائي */
+        /* جريد السيرفرات السحابي */
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
         .server-card {
-            background: rgba(20, 15, 38, 0.6);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 12px;
+            background: rgba(14, 10, 28, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 16px;
             padding: 25px;
             position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
         }
 
         .server-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             border-color: #00f3ff;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.25);
         }
 
         .server-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .server-name {
             font-size: 20px;
+            font-weight: 700;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px; /* تباعد ممتاز للأيقونات العشوائية المضيئة */
         }
 
-        /* لمبة الحالة المضيئة 🟢 / 🔴 */
         .status-badge {
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 11px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
         .status-online {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.05);
             color: #00ff88;
-            border: 1px solid #00ff88;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
         }
 
         .status-offline {
-            background: rgba(255, 0, 85, 0.1);
+            background: rgba(255, 0, 85, 0.05);
             color: #ff0055;
-            border: 1px solid #ff0055;
+            border: 1px solid rgba(255, 0, 85, 0.3);
         }
 
         .server-body {
-            color: #aaa;
+            color: #94a3b8;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.8;
             margin-bottom: 25px;
         }
 
         .server-info-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding-bottom: 6px;
         }
 
         .server-info-item span:last-child {
-            color: #fff;
-            font-weight: 500;
+            color: #ffffff;
+            font-weight: 600;
         }
 
-        /* أزرار التحكم من برة اللستة */
-        .server-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 10px;
+        .btn-manage {
+            width: 100%;
+            padding: 12px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            background: #00f3ff;
+            color: #000;
+            font-weight: 700;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s ease;
+            transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-
-        .btn-manage {
-            background: #00f3ff;
-            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 243, 255, 0.2);
         }
 
         .btn-manage:hover {
-            box-shadow: 0 0 15px #00f3ff;
+            background: #00e5ff;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
             transform: scale(1.02);
         }
+
+        /* ⚙️ شاشة الإعدادات المنبثقة (Popup Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 2, 10, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .settings-modal {
+            background: #0e0a1f;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 20px;
+            padding: 35px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            transform: scale(0.9);
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .settings-modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: #00f3ff;
+            text-shadow: 0 0 10px rgba(0,243,255,0.3);
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal-btn:hover { color: #ff0055; }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(5, 3, 10, 0.6);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+            text-align: right;
+        }
+
+        .form-group input:focus {
+            border-color: #00f3ff;
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+        }
+
+        .form-group input:disabled {
+            color: #64748b;
+            background: rgba(255,255,255,0.02);
+            cursor: not-allowed;
+        }
+
+        /* زر الكونفرم المضيء والذكي */
+        .btn-confirm {
+            width: 100%;
+            padding: 14px;
+            background: #00f3ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            display: none; /* يظهر بالـ JS فقط لما يغير الباسورد */
+            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .btn-confirm.show-btn { display: block; }
+        .btn-confirm:hover { background: #00e5ff; box-shadow: 0 0 25px #00f3ff; }
+
+        .modal-logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 0, 85, 0.05);
+            border: 1px solid #ff0055;
+            color: #ff0055;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .modal-logout-btn:hover { background: #ff0055; color: #fff; box-shadow: 0 0 15px #ff0055; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo"><i class="fas fa-server"></i> FUTURE HOST</div>
-        <div class="user-info">
-            <span id="userDisplay"><i class="fas fa-user-circle"></i> جاري التحميل...</span>
-            <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
-        </div>
-    </header>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
 
-    <div class="container">
-        <h2 class="welcome-msg">أهلاً بك في سحابة المستقبل 👋</h2>
+    <aside class="sidebar" id="sidebarContainer">
+        <div class="sidebar-logo">
+            <i class="fas fa-server"></i> FUTURE HOST
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a class="sidebar-link active" onclick="switchTab('servers')"><i class="fas fa-home"></i> قائمة السيرفرات</a>
+            <a class="sidebar-link" onclick="switchTab('servers')"><i class="fas fa-server"></i> Servers</a>
+            <a class="sidebar-link" onclick="switchTab('developer')"><i class="fas fa-code"></i> المطور</a>
+            <a class="sidebar-link" onclick="switchTab('tools')"><i class="fas fa-tools"></i> الأدوات</a>
+            <a class="sidebar-link" onclick="switchTab('translation')"><i class="fas fa-language"></i> الترجمة</a>
+        </nav>
+
+        <div class="sidebar-user-card">
+            <div class="user-details">
+                <span class="user-name-display" id="sidebarName">جاري التحميل...</span>
+                <span class="user-username-display" id="sidebarUser">@loading...</span>
+            </div>
+            <button class="settings-gear-btn" onclick="toggleSettingsModal(true)"><i class="fas fa-cog"></i></button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="welcome-section">
+            <h2 class="welcome-msg" id="welcomeHeading">أهلاً بك في سحابة المستقبل 👋</h2>
+            <p class="welcome-sub" id="welcomeSub">مرحبًا بك مجددًا! إليك نظرة كاملة على خوادمك النشطة وموارد السحابة.</p>
+        </div>
         
         <div class="servers-grid" id="serversContainer">
+            </div>
+    </main>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="settings-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-shield"></i> إعدادات الحساب</h3>
+                <button class="close-modal-btn" onclick="toggleSettingsModal(false)"><i class="fas fa-times"></i></button>
+            </div>
             
-            <div class="server-card">
-                <div class="server-header">
-                    <div class="server-name"><i class="fab fa-discord" style="color: #5865F2;"></i> بوت ديسكورد #01</div>
-                    <span class="status-badge status-online"><i class="fas fa-circle"></i> شغال 24/7</span>
-                </div>
-                <div class="server-body">
-                    <div class="server-info-item"><span>نوع الخادم:</span> <span>Node.js v20</span></div>
-                    <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>45MB / 512MB</span></div>
-                    <div class="server-info-item"><span>البروكسي المتصل:</span> <span>مفعّل 🌐</span></div>
-                </div>
-                <div class="server-actions">
-                    <button class="action-btn btn-manage" onclick="goToServer('bot-01')">
-                        <i class="fas fa-cog"></i> دخول وإدارة السيرفر
-                    </button>
-                </div>
+            <div class="form-group">
+                <label>اسم العرض (Display Name)</label>
+                <input type="text" id="modalDisplayName" disabled>
             </div>
 
-            <div class="server-card">
-                <div class="server-header">
-                    <div class="server-name"><i class="fas fa-robot"></i> سكربت العروض الفوري</div>
-                    <span class="status-badge status-offline"><i class="fas fa-circle"></i> متوقف</span>
-                </div>
-                <div class="server-body">
-                    <div class="server-info-item"><span>نوع الخادم:</span> <span>Python Script</span></div>
-                    <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>0MB / 256MB</span></div>
-                    <div class="server-info-item"><span>البروكسي المتصل:</span> <span>غير متصل ❌</span></div>
-                </div>
-                <div class="server-actions">
-                    <button class="action-btn btn-manage" onclick="goToServer('script-02')">
-                        <i class="fas fa-cog"></i> دخول وإدارة السيرفر
-                    </button>
-                </div>
+            <div class="form-group">
+                <label>اسم المستخدم (Username)</label>
+                <input type="text" id="modalUsername" disabled style="direction: ltr;">
             </div>
 
+            <div class="form-group">
+                <label>البريد الإلكتروني (Email)</label>
+                <input type="email" id="modalEmail" disabled style="direction: ltr;">
+            </div>
+
+            <div class="form-group">
+                <label>المعرف الخاص الفريد (Your UID - الثابت دائمًا)</label>
+                <input type="text" id="modalUID" disabled style="direction: ltr; font-size: 11px; color: #00f3ff; border-color: rgba(0,243,255,0.3)">
+            </div>
+
+            <div class="form-group">
+                <label>كلمة المرور الجديدة</label>
+                <input type="password" id="newPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
+            </div>
+
+            <div class="form-group">
+                <label>تأكيد كلمة المرور</label>
+                <input type="password" id="confirmPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
+            </div>
+
+            <button class="btn-confirm" id="confirmBtn" onclick="updateUserPassword()"><i class="fas fa-check-circle"></i> حفظ التغييرات</button>
+            <button class="modal-logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // نفس الـ Config بتاعك عشان نربط الحسابات
         const firebaseConfig = {
           apiKey: "AIzaSyD0SQ_6mbLLquTN60Ui2T2nLatmzh-ikvk",
           authDomain: "host-the-future-b9ef5.firebaseapp.com",
@@ -254,34 +540,167 @@
           storageBucket: "host-the-future-b9ef5.firebasestorage.app",
           messagingSenderId: "613938151767",
           appId: "1:613938151767:web:f3bb0d95f14cc8d1cb7e12",
-          measurementId: "G-2B5YWFC4VV"
+          measurementId: "G-2B5YWFC4VV",
+          databaseURL: "https://host-the-future-b9ef5-default-rtdb.firebaseio.com/"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getDatabase(app);
 
-        // [جدار الحماية]: التأكد من تسجيل الدخول وطرد الدخلاء 🛡️🛑
-        onAuthStateChanged(auth, (user) => {
+        // 🛡️ فحص الحساب وجلب البيانات السحابية الحقيقية (اسم العرض، اليوزر، الـ ID الثابت)
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // اليوزر مسجل دخول صح! هنعرض إيميله فوق في الهيدر
-                document.getElementById('userDisplay').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email}`;
+                const uid = user.uid; // الـ ID الفريد الثابت للربط السيرفرات والبوتات مستقبلاً
+                
+                // جلب اسم العرض واليوزر نيم من نود الـ users اللي سجلناها بالتفعيل
+                try {
+                    const userRef = ref(db, 'users/' + uid);
+                    const snapshot = await get(userRef);
+                    
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        const dispName = userData.displayName || "مستخدم المستقبل";
+                        const uName = userData.username || "user";
+
+                        // عرض البيانات في السايد بار والترحيب الفوقي
+                        document.getElementById('sidebarName').innerText = dispName;
+                        document.getElementById('sidebarUser').innerText = "@" + uName;
+                        document.getElementById('welcomeHeading').innerText = `أهلاً بك، ${dispName} 👋`;
+
+                        // تعبئة بيانات المودال المنبثق للإعدادات
+                        document.getElementById('modalDisplayName').value = dispName;
+                        document.getElementById('modalUsername').value = "@" + uName;
+                        document.getElementById('modalEmail').value = user.email;
+                        document.getElementById('modalUID').value = uid; // عرض الـ ID الخاص به
+                    } else {
+                        // كود احتياطي لو لسه معملش النود
+                        document.getElementById('sidebarName').innerText = user.displayName || "مستخدم المستقبل";
+                        document.getElementById('sidebarUser').innerText = "@" + user.email.split('@')[0];
+                    }
+                } catch (err) {
+                    console.error("Error fetching user cloud data:", err);
+                }
+
+                // تشغيل رندر السيرفرات بالأيقونات العشوائية الفخمة
+                renderServers();
+
             } else {
-                // يوزر مش مسجل ودخل تسلل عن طريق الرابط؟ اطردددده!
+                // طرد لو مش مسجل
                 window.location.href = 'index.html';
             }
         });
 
-        // دالة تسجيل الخروج
+        // 🎲 نظام توليد كروت السيرفرات بأيقونات عشوائية فخمة (ديسكورد / بوت)
+        function renderServers() {
+            const container = document.getElementById('serversContainer');
+            
+            // داتا تجريبية محاكية للسيرفرات اللي هتنزل بعدين
+            const serversData = [
+                { id: 'bot-01', name: 'سيرفر حماية المستقبل', type: 'Node.js v20', ram: '42MB / 512MB', proxy: 'مفعّل 🌐', status: 'online', statusText: 'شغال 24/7' },
+                { id: 'script-02', name: 'سكربت فحص اليوزرات المطور', type: 'Python Script', ram: '0MB / 256MB', proxy: 'غير متصل ❌', status: 'offline', statusText: 'متوقف' },
+                { id: 'music-03', name: 'إنزو ميوزك بوت الكوني', type: 'Node.js v20', ram: '110MB / 512MB', proxy: 'مفعّل 🌐', status: 'online', statusText: 'شغال 24/7' }
+            ];
+
+            // مصفوفة الأيقونات الفخمة اللي طلبتها عشان تختار عشوائي لكل كارت
+            const coolIcons = [
+                '<i class="fab fa-discord" style="color: #5865F2;"></i>',
+                '<i class="fas fa-robot" style="color: #00f3ff; text-shadow: 0 0 10px #00f3ff;"></i>'
+            ];
+
+            container.innerHTML = ''; // تنظيف الكانتينر
+
+            serversData.forEach(server => {
+                // اختيار أيقونة عشوائية تكتيكية
+                const randomIcon = coolIcons[Math.floor(Math.random() * coolIcons.length)];
+                
+                const cardHtml = `
+                    <div class="server-card">
+                        <div class="server-header">
+                            <div class="server-name">${randomIcon} ${server.name}</div>
+                            <span class="status-badge ${server.status === 'online' ? 'status-online' : 'status-offline'}">
+                                <i class="fas fa-circle"></i> ${server.statusText}
+                            </span>
+                        </div>
+                        <div class="server-body">
+                            <div class="server-info-item"><span>نوع الخادم:</span> <span>${server.type}</span></div>
+                            <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>${server.ram}</span></div>
+                            <div class="server-info-item"><span>البروكسي المتصل:</span> <span>${server.proxy}</span></div>
+                        </div>
+                        <div class="server-actions">
+                            <button class="action-btn btn-manage" onclick="goToServer('${server.id}')">
+                                <i class="fas fa-cog"></i> دخول وإدارة السيرفر
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // ☰ فتح وإغلاق السايد بار تكتيكياً للهواتف والشاشات
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebarContainer = document.getElementById('sidebarContainer');
+        menuToggle.addEventListener('click', () => {
+            sidebarContainer.classList.toggle('active');
+        });
+
+        // ⚙️ التحكم في فتح وغلق نافذة الحساب المنبثقة
+        window.toggleSettingsModal = function(show) {
+            const modal = document.getElementById('settingsModal');
+            if(show) modal.classList.add('active');
+            else {
+                modal.classList.remove('active');
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                document.getElementById('confirmBtn').classList.remove('show-btn');
+            }
+        }
+
+        // 🔒 إظهار زر الحفظ فقط لما يملأ خانات الباسورد الجديد وتكون متطابقة
+        window.checkPasswordInputs = function() {
+            const pass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            if (pass.length >= 6 && pass === confirmPass) {
+                confirmBtn.classList.add('show-btn');
+            } else {
+                confirmBtn.classList.remove('show-btn');
+            }
+        }
+
+        // 🔄 تحديث الباسورد في الـ Auth الفعلي
+        window.updateUserPassword = function() {
+            const newPass = document.getElementById('newPassword').value;
+            const user = auth.currentUser;
+
+            if (user) {
+                updatePassword(user, newPass).then(() => {
+                    alert("تم تحديث كلمة المرور بنجاح يا غالي! 🔒");
+                    toggleSettingsModal(false);
+                }).catch((error) => {
+                    alert("خطأ أثناء التحديث: " + error.message + " (قد يتطلب منك إعادة تسجيل الدخول لتحديث الأمان)");
+                });
+            }
+        }
+
+        // التنقل بين أزرار السايد بار
+        window.switchTab = function(tabName) {
+            console.log("تم الانتقال لـ: " + tabName);
+            // تكتيكياً يمكن شحن نودز تانية هنا
+        }
+
+        // تسجيل الخروج
         window.handleLogout = function() {
             signOut(auth).then(() => {
                 window.location.href = 'index.html';
             });
         }
 
-        // دالة الدخول وتفاصيل السيرفر (العركة اللي جاية)
+        // دخول السيرفر الفردي
         window.goToServer = function(serverId) {
-            alert("جاهز يا معلم؟ السيرفر ده هيدخلنا على صفحة التحكم الداخلية بتاعته: " + serverId);
-            // هنا بعدين هنخليه يفتح صفحة التحكم الفردية للسيرفر
+            alert("سيرفر ذكي! جاري الانتقال للوحة التحكم الداخلية للخادم: " + serverId);
         }
     </script>
 </body>
