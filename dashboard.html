@@ -1,485 +1,345 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr" id="htmlTag">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | قائمة السيرفرات</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Future Host | Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* التصميم السيبراني المظلم الفخم لـ Host The Future */
-        * {
+        :root {
+            --bg-page: #05020a;
+            --bg-nav: rgba(10, 6, 22, 0.88);
+            --bg-card: rgba(20, 15, 38, 0.6);
+            --bg-hover: #13122b;
+            --bg-danger: rgba(239, 68, 68, 0.08);
+            --accent: #00f3ff;
+            --accent-soft: rgba(0, 243, 255, 0.1);
+            --accent-glow: rgba(0, 243, 255, 0.25);
+            --accent-pro: #f59e0b;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-hi: rgba(0, 243, 255, 0.35);
+            --text: #e2e8f0;
+            --text-muted: #64748b;
+            --text-danger: #f87171;
+            --r: 8px;
+            --r-lg: 14px;
+            --nav-h: 70px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        /* دعم الخطوط للغتين */
+        html[lang="ar"] * {
+            font-family: 'Cairo', sans-serif !important;
+        }
+        html[lang="en"] * {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        button { background: none; border: none; cursor: pointer; font: inherit; color: inherit; }
+        a { text-decoration: none; color: inherit; }
 
         body {
-            background: radial-gradient(circle at center, #0f0c1b 0%, #05020a 100%);
-            color: #fff;
+            background: radial-gradient(circle at center, #0f0c1b 0%, var(--bg-page) 100%);
             min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
+            color: var(--text);
+            padding-top: calc(var(--nav-h) + 30px);
         }
 
-        /* ☰ زر القائمة العلوية للهواتف والشاشات */
-        .menu-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(20, 15, 38, 0.9);
-            border: 1px solid #00f3ff;
-            color: #00f3ff;
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            cursor: pointer;
+        /* ── NAVBAR العلوي المتناسق ──────────────────────────────────────── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: var(--bg-nav);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 32px rgba(0, 243, 255, 0.15);
             z-index: 1000;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            transition: 0.3s;
-        }
-
-        .menu-toggle:hover {
-            background: #00f3ff;
-            color: #000;
-            box-shadow: 0 0 20px #00f3ff;
-        }
-
-        /* 🔮 السايد بار المطور الفخم */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 280px;
-            height: 100vh;
-            background: rgba(8, 5, 18, 0.95);
-            backdrop-filter: blur(15px);
-            border-left: 2px solid #00f3ff;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            z-index: 999;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.7);
-        }
-
-        /* قفل السايد بار في الشاشات الصغيرة وفتحه بالـ JS */
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(280px);
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-right: 0 !important;
-            }
-        }
-
-        /* لوجو الهوست الفخم داخل السايد بار */
-        .sidebar-logo {
-            font-size: 22px;
-            font-weight: 800;
-            color: #00f3ff;
-            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
-            margin-bottom: 25px;
-        }
-
-        /* الأزرار والقائمة المتكاملة */
-        .sidebar-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex-grow: 1;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: #a3a3c2;
-            text-decoration: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .sidebar-link i {
-            font-size: 18px;
-            width: 25px;
-            text-align: center;
-        }
-
-        .sidebar-link:hover, .sidebar-link.active {
-            color: #00f3ff;
-            background: rgba(0, 243, 255, 0.05);
-            border-right: 4px solid #00f3ff;
-            box-shadow: inset 10px 0 15px rgba(0, 243, 255, 0.02);
-        }
-
-        /* كارت الحساب الاحترافي أسفل السايد بار */
-        .sidebar-user-card {
-            background: rgba(20, 15, 38, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: auto;
+            padding: 0 24px;
+            transition: all 0.3s ease;
         }
 
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            max-width: 160px;
+        /* اللوجو السينمائي */
+        .brand { display: flex; align-items: center; gap: 10px; user-select: none; }
+        .brand-mark {
+            font-size: 22px; color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
+        }
+        .brand-name {
+            font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+            color: var(--text); letter-spacing: -0.5px;
+        }
+        .brand-name span { color: var(--accent); }
+
+        /* يمين الهيدر */
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+
+        /* زر تحويل اللغة التكتيكي */
+        .lang-btn {
+            padding: 6px 12px; border: 1px solid var(--border);
+            border-radius: var(--r); font-size: 12px; font-weight: 600;
+            color: var(--text-muted); transition: all 0.2s;
+        }
+        .lang-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+        .icon-btn {
+            position: relative; width: 38px; height: 38px; border-radius: var(--r);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); transition: all .18s;
+        }
+        .icon-btn:hover { color: var(--text); background: var(--bg-hover); }
+        .icon-btn.active { color: var(--accent); background: var(--accent-soft); }
+
+        .notif-dot {
+            position: absolute; top: 8px; right: 8px; width: 7px; height: 7px;
+            background: #ef4444; border-radius: 50%; box-shadow: 0 0 8px #ef4444;
         }
 
-        .user-name-display {
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .nav-divider { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+
+        /* تريجر البروفايل زي Udemy وبأبعاد تمنع الالتصاق */
+        .profile-trigger {
+            display: flex; align-items: center; gap: 10px;
+            padding: 5px 12px 5px 6px; border-radius: 40px;
+            border: 1px solid var(--border); transition: all .2s; outline: none;
+        }
+        html[dir="rtl"] .profile-trigger { padding: 5px 6px 5px 12px; }
+
+        .profile-trigger:hover { border-color: var(--border-hi); background: var(--bg-hover); }
+        .profile-trigger.active {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: var(--bg-hover);
         }
 
-        .user-username-display {
-            font-size: 12px;
-            color: #00f3ff;
-            direction: ltr;
-            text-align: right;
+        .avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(135deg, #00f3ff, #6366f1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: #fff;
         }
+        .trigger-name { font-size: 14px; font-weight: 600; color: var(--text); }
+        
+        .chevron { color: var(--text-muted); transition: transform .3s cubic-bezier(.34, 1.56, .64, 1); }
+        .profile-trigger.active .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        .settings-gear-btn {
-            background: transparent;
-            border: none;
-            color: #64748b;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.3s;
+        /* ── القوائم المنبثقة والأنيميشن ────────────────────────────────── */
+        .panel-wrap { position: relative; }
+        .panel {
+            position: absolute; top: calc(100% + 12px); right: 0;
+            background: #0b071e; border: 1px solid var(--border); border-radius: var(--r-lg);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, .8), 0 0 0 1px rgba(0, 243, 255, 0.1);
+            z-index: 999; overflow: hidden; opacity: 0;
+            transform: translateY(-10px) scale(.95); transform-origin: top right;
+            pointer-events: none; transition: all .25s cubic-bezier(.16, 1, .3, 1);
         }
+        /* ضبط اتجاه القوائم أوتوماتيكياً عند تحويل اللغة */
+        html[dir="rtl"] .panel { right: auto; left: 0; transform-origin: top left; }
 
-        .settings-gear-btn:hover {
-            color: #00f3ff;
-            transform: rotate(45deg);
+        .panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+        /* قائمة البروفايل الاحترافية */
+        #profilePanel { width: 270px; }
+        .panel-user { padding: 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+        .panel-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(135deg, #00f3ff, #6366f1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 700; color: #fff; box-shadow: 0 0 12px var(--accent-glow);
         }
+        .panel-user-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .panel-user-email { font-size: 11px; color: var(--text-muted); margin-top: 2px; word-break: break-all; }
+        
+        .panel-section { padding: 8px; }
+        .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 8px 12px 4px; }
+        .panel-divider { height: 1px; background: var(--border); }
 
-        /* 🪐 حاوية المحتوى الأساسية */
-        .main-content {
-            flex-grow: 1;
-            margin-right: 280px; /* تباعد تكتيكي عشان السايد بار */
-            padding: 40px;
-            transition: 0.4s;
+        .menu-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+            border-radius: var(--r); cursor: pointer; transition: all .2s;
         }
+        .menu-item:hover { background: var(--bg-hover); color: var(--accent); padding-left: 16px; }
+        html[dir="rtl"] .menu-item:hover { padding-left: 12px; padding-right: 16px; }
 
-        /* تباعد النصوص العلوية ومنع الالتصاق */
-        .welcome-section {
-            margin-bottom: 40px;
-            margin-top: 20px;
+        .menu-item.danger:hover { background: var(--bg-danger); color: var(--text-danger); }
+        .item-icon {
+            width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: .2s;
         }
+        .menu-item:hover .item-icon { color: inherit; transform: scale(1.05); }
+        .item-text { flex: 1; }
+        .item-label { display: block; font-size: 13px; font-weight: 500; }
+        .item-sub { display: block; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 
-        .welcome-msg {
-            font-size: 32px;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 12px; /* حل مشكلة لزق الكلام */
-            border-right: 4px solid #00f3ff;
-            padding-right: 15px;
-        }
+        /* ── الحاوية الأساسية وجريد السيرفرات ────────────────────────────── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .welcome-section { margin-bottom: 35px; }
+        .welcome-msg { font-size: 32px; font-weight: 800; margin-bottom: 8px; border-left: 4px solid var(--accent); padding-left: 15px; }
+        html[dir="rtl"] .welcome-msg { border-left: none; border-right: 4px solid var(--accent); padding-left: 0; padding-right: 15px; }
+        .welcome-sub { color: var(--text-muted); font-size: 15px; }
 
-        .welcome-sub {
-            color: #94a3b8;
-            font-size: 16px;
-            margin-right: 18px;
-        }
-
-        /* جريد السيرفرات السحابي */
-        .servers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
+        .servers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 25px; }
         .server-card {
-            background: rgba(14, 10, 28, 0.7);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            border-radius: 16px;
-            padding: 25px;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
+            background: var(--bg-card); border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 16px; padding: 25px; transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(5px);
         }
+        .server-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 0 25px var(--accent-glow); }
+        
+        .server-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .server-name { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .status-online { background: rgba(0, 255, 136, 0.05); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3); }
+        .status-offline { background: rgba(255, 0, 85, 0.05); color: #ff0055; border: 1px solid rgba(255, 0, 85, 0.3); }
 
-        .server-card:hover {
-            transform: translateY(-8px);
-            border-color: #00f3ff;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.25);
-        }
-
-        .server-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-        }
-
-        .server-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 12px; /* تباعد ممتاز للأيقونات العشوائية المضيئة */
-        }
-
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-online {
-            background: rgba(0, 255, 136, 0.05);
-            color: #00ff88;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
-        }
-
-        .status-offline {
-            background: rgba(255, 0, 85, 0.05);
-            color: #ff0055;
-            border: 1px solid rgba(255, 0, 85, 0.3);
-        }
-
-        .server-body {
-            color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
-
-        .server-info-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            padding-bottom: 6px;
-        }
-
-        .server-info-item span:last-child {
-            color: #ffffff;
-            font-weight: 600;
-        }
+        .server-body { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        .server-info-item { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 5px; }
+        .server-info-item span:last-child { color: #fff; font-weight: 600; }
 
         .btn-manage {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: #00f3ff;
-            color: #000;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0, 243, 255, 0.2);
+            width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--accent);
+            color: #000; font-weight: 700; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+        .btn-manage:hover { background: #00e5ff; box-shadow: 0 0 20px var(--accent-glow); }
 
-        .btn-manage:hover {
-            background: #00e5ff;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
-            transform: scale(1.02);
-        }
-
-        /* ⚙️ شاشة الإعدادات المنبثقة (Popup Modal) */
+        /* ── شاشة الإعدادات المنبثقة (Modal) ────────────────────────────── */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(4, 2, 10, 0.85);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 2, 10, 0.85); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .settings-modal {
-            background: #0e0a1f;
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 20px;
-            padding: 35px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            transform: scale(0.9);
-            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
+            background: #0b071e; border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 20px;
+            padding: 30px; width: 100%; max-width: 480px; transform: scale(0.9); transition: 0.3s ease;
         }
-
-        .modal-overlay.active .settings-modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 15px;
-        }
-
-        .modal-header h3 {
-            font-size: 22px;
-            color: #00f3ff;
-            text-shadow: 0 0 10px rgba(0,243,255,0.3);
-        }
-
-        .close-modal-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
+        .modal-overlay.active .settings-modal { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .modal-header h3 { font-size: 20px; color: var(--accent); }
+        .close-modal-btn { background: transparent; border: none; color: #64748b; font-size: 18px; cursor: pointer; }
         .close-modal-btn:hover { color: #ff0055; }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 600; }
         .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(5, 3, 10, 0.6);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            transition: 0.3s;
-            text-align: right;
+            width: 100%; padding: 11px 14px; background: rgba(5, 3, 10, 0.6);
+            border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 14px; transition: 0.3s;
         }
+        .form-group input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px var(--accent-glow); }
+        .form-group input:disabled { color: #475569; background: rgba(255,255,255,0.01); cursor: not-allowed; }
 
-        .form-group input:focus {
-            border-color: #00f3ff;
-            outline: none;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
-        }
-
-        .form-group input:disabled {
-            color: #64748b;
-            background: rgba(255,255,255,0.02);
-            cursor: not-allowed;
-        }
-
-        /* زر الكونفرم المضيء والذكي */
         .btn-confirm {
-            width: 100%;
-            padding: 14px;
-            background: #00f3ff;
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-            display: none; /* يظهر بالـ JS فقط لما يغير الباسورد */
-            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.3);
+            width: 100%; padding: 12px; background: var(--accent); color: #000; border: none;
+            border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; display: none; margin-top: 10px;
         }
-
         .btn-confirm.show-btn { display: block; }
-        .btn-confirm:hover { background: #00e5ff; box-shadow: 0 0 25px #00f3ff; }
-
-        .modal-logout-btn {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 0, 85, 0.05);
-            border: 1px solid #ff0055;
-            color: #ff0055;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
-        }
-
-        .modal-logout-btn:hover { background: #ff0055; color: #fff; box-shadow: 0 0 15px #ff0055; }
     </style>
 </head>
+
 <body>
 
-    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <nav class="navbar">
+        <a href="#" class="brand">
+            <div class="brand-mark"><i class="fas fa-server"></i></div>
+            <span class="brand-name">FUTURE<span>HOST</span></span>
+        </a>
 
-    <aside class="sidebar" id="sidebarContainer">
-        <div class="sidebar-logo">
-            <i class="fas fa-server"></i> FUTURE HOST
-        </div>
-        
-        <nav class="sidebar-menu">
-            <a class="sidebar-link active" onclick="switchTab('servers')"><i class="fas fa-home"></i> قائمة السيرفرات</a>
-            <a class="sidebar-link" onclick="switchTab('servers')"><i class="fas fa-server"></i> Servers</a>
-            <a class="sidebar-link" onclick="switchTab('developer')"><i class="fas fa-code"></i> المطور</a>
-            <a class="sidebar-link" onclick="switchTab('tools')"><i class="fas fa-tools"></i> الأدوات</a>
-            <a class="sidebar-link" onclick="switchTab('translation')"><i class="fas fa-language"></i> الترجمة</a>
-        </nav>
+        <div class="nav-right">
+            
+            <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">العربية</button>
 
-        <div class="sidebar-user-card">
-            <div class="user-details">
-                <span class="user-name-display" id="sidebarName">جاري التحميل...</span>
-                <span class="user-username-display" id="sidebarUser">@loading...</span>
+            <div class="panel-wrap" id="notifWrap">
+                <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                    <div class="notif-dot"></div>
+                    <i class="fas fa-bell"></i>
+                </button>
             </div>
-            <button class="settings-gear-btn" onclick="toggleSettingsModal(true)"><i class="fas fa-cog"></i></button>
-        </div>
-    </aside>
 
-    <main class="main-content">
+            <div class="nav-divider"></div>
+
+            <div class="panel-wrap" id="profileWrap">
+                <button class="profile-trigger" id="profileBtn">
+                    <div class="avatar" id="avatarCircle">FH</div>
+                    <span class="trigger-name" id="topTriggerName">User</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </button>
+
+                <div class="panel" id="profilePanel">
+                    <div class="panel-user">
+                        <div class="panel-avatar" id="dropdownAvatar">FH</div>
+                        <div>
+                            <div class="panel-user-name" id="dropdownDisplayName">Loading...</div>
+                            <div class="panel-user-email" id="dropdownEmail">loading@hosting.com</div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="section-label" id="lblDashboard">Dashboard Options</div>
+                        
+                        <div class="menu-item" onclick="switchSection('servers')">
+                            <div class="item-icon"><i class="fas fa-layer-group"></i></div>
+                            <span class="item-text">
+                                <span class="item-label" id="lblServers">Servers List</span>
+                                <span class="item-sub" id="lblServersSub">Manage active instances</span>
+                            </span>
+                        </div>
+
+                        <div class="menu-item" onclick="openSettingsModal()">
+                            <div class="item-icon"><i class="fas fa-user-cog"></i></div>
+                            <span class="item-text">
+                                <span class="item-label" id="lblAccountSettings">Account Settings</span>
+                                <span class="item-sub" id="lblAccountSettingsSub">Update profile & security</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="panel-divider"></div>
+
+                    <div class="panel-section">
+                        <div class="section-label" id="lblDevTools">Developer Hub</div>
+                        <div class="menu-item" onclick="switchSection('developer')">
+                            <div class="item-icon"><i class="fas fa-code"></i></div>
+                            <span class="item-text"><span class="item-label" id="lblDeveloper">Developer Area</span></span>
+                        </div>
+                        <div class="menu-item" onclick="switchSection('tools')">
+                            <div class="item-icon"><i class="fas fa-tools"></i></div>
+                            <span class="item-text"><span class="item-label" id="lblTools">Tools</span></span>
+                        </div>
+                    </div>
+
+                    <div class="panel-divider"></div>
+
+                    <div class="panel-section">
+                        <div class="menu-item danger" onclick="handleLogout()">
+                            <div class="item-icon"><i class="fas fa-sign-out-alt"></i></div>
+                            <span class="item-text"><span class="item-label" id="lblLogout">Log Out</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <main class="container">
         <div class="welcome-section">
-            <h2 class="welcome-msg" id="welcomeHeading">أهلاً بك في سحابة المستقبل 👋</h2>
-            <p class="welcome-sub" id="welcomeSub">مرحبًا بك مجددًا! إليك نظرة كاملة على خوادمك النشطة وموارد السحابة.</p>
+            <h2 class="welcome-msg" id="welcomeHeading">Welcome to the future cloud 👋</h2>
+            <p class="welcome-sub" id="welcomeSub">Here is a complete view of your active automated instances.</p>
         </div>
         
         <div class="servers-grid" id="serversContainer">
@@ -489,42 +349,36 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="settings-modal">
             <div class="modal-header">
-                <h3><i class="fas fa-user-shield"></i> إعدادات الحساب</h3>
-                <button class="close-modal-btn" onclick="toggleSettingsModal(false)"><i class="fas fa-times"></i></button>
+                <h3 id="modalTitle"><i class="fas fa-user-shield"></i> Profile Settings</h3>
+                <button class="close-modal-btn" onclick="closeSettingsModal()"><i class="fas fa-times"></i></button>
             </div>
             
             <div class="form-group">
-                <label>اسم العرض (Display Name)</label>
+                <label id="lblFormDisplay">Display Name</label>
                 <input type="text" id="modalDisplayName" disabled>
             </div>
-
             <div class="form-group">
-                <label>اسم المستخدم (Username)</label>
-                <input type="text" id="modalUsername" disabled style="direction: ltr;">
+                <label id="lblFormUser">Username</label>
+                <input type="text" id="modalUsername" disabled>
             </div>
-
             <div class="form-group">
-                <label>البريد الإلكتروني (Email)</label>
-                <input type="email" id="modalEmail" disabled style="direction: ltr;">
+                <label id="lblFormEmail">Email Address</label>
+                <input type="email" id="modalEmail" disabled>
             </div>
-
             <div class="form-group">
-                <label>المعرف الخاص الفريد (Your UID - الثابت دائمًا)</label>
-                <input type="text" id="modalUID" disabled style="direction: ltr; font-size: 11px; color: #00f3ff; border-color: rgba(0,243,255,0.3)">
+                <label id="lblFormUID">Unique Identifier (UID - Permanent)</label>
+                <input type="text" id="modalUID" disabled style="color: var(--accent); border-color: rgba(0,243,255,0.2);">
             </div>
-
             <div class="form-group">
-                <label>كلمة المرور الجديدة</label>
+                <label id="lblFormNewPass">New Password</label>
                 <input type="password" id="newPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
             </div>
-
             <div class="form-group">
-                <label>تأكيد كلمة المرور</label>
+                <label id="lblFormConfirmPass">Confirm Password</label>
                 <input type="password" id="confirmPassword" placeholder="••••••••" oninput="checkPasswordInputs()">
             </div>
 
-            <button class="btn-confirm" id="confirmBtn" onclick="updateUserPassword()"><i class="fas fa-check-circle"></i> حفظ التغييرات</button>
-            <button class="modal-logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+            <button class="btn-confirm" id="confirmBtn" onclick="updateUserPassword()">Confirm Changes</button>
         </div>
     </div>
 
@@ -548,159 +402,217 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // 🛡️ فحص الحساب وجلب البيانات السحابية الحقيقية (اسم العرض، اليوزر، الـ ID الثابت)
+        // قاموس الترجمة الفوري ليدعم اللغتين وتصفح جوجل السلس
+        const translations = {
+            en: {
+                toggleBtn: "العربية", welcome: "Welcome to the future cloud 👋", sub: "Here is a complete view of your active automated instances.",
+                dashOpts: "Dashboard Options", sList: "Servers List", sSub: "Manage active instances", accSet: "Account Settings", accSub: "Update profile & security",
+                devHub: "Developer Hub", devArea: "Developer Area", tools: "Tools", logout: "Log Out",
+                mTitle: "Profile Settings", fDisp: "Display Name", fUser: "Username", fEmail: "Email Address", fUid: "Unique Identifier (UID - Permanent)", fNew: "New Password", fConf: "Confirm Password", btnConf: "Confirm Changes"
+            },
+            ar: {
+                toggleBtn: "English", welcome: "مرحباً بك في سحابة المستقبل 👋", sub: "إليك نظرة كاملة شاملة على خوادمك المؤتمتة النشطة ومواردك.",
+                dashOpts: "خيارات لوحة التحكم", sList: "قائمة السيرفرات", sSub: "إدارة السيرفرات الفعالة", accSet: "إعدادات الحساب", accSub: "تحديث الأمان والبروفايل",
+                devHub: "مركز التطوير المطور", devArea: "منطقة المطور", tools: "الأدوات والسكربتات", logout: "تسجيل الخروج",
+                mTitle: "إعدادات الحساب الشخصي", fDisp: "اسم العرض الحقيقي", fUser: "اسم المستخدم الفريد", fEmail: "البريد الإلكتروني الحالي", fUid: "المعرف الفريد الثابت (UID)", fNew: "كلمة المرور الجديدة", fConf: "تأكيد كلمة المرور الجديدة", btnConf: "حفظ وتأكيد التغييرات"
+            }
+        };
+
+        let currentLang = "en";
+
+        // دالة تبديل اللغة الفورية وتعديل الـ DOM بالكامل
+        window.toggleLanguage = function() {
+            currentLang = currentLang === "en" ? "ar" : "en";
+            const html = document.getElementById('htmlTag');
+            html.setAttribute('lang', currentLang);
+            html.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+            
+            const t = translations[currentLang];
+            document.getElementById('langToggleBtn').innerText = t.toggleBtn;
+            document.getElementById('welcomeSub').innerText = t.sub;
+            
+            // تحديث نصوص الـ Dropdown والـ Modal
+            document.getElementById('lblDashboard').innerText = t.dashOpts;
+            document.getElementById('lblServers').innerText = t.sList;
+            document.getElementById('lblServersSub').innerText = t.sSub;
+            document.getElementById('lblAccountSettings').innerText = t.accSet;
+            document.getElementById('lblAccountSettingsSub').innerText = t.accSub;
+            document.getElementById('lblDevTools').innerText = t.devHub;
+            document.getElementById('lblDeveloper').innerText = t.devArea;
+            document.getElementById('lblTools').innerText = t.tools;
+            document.getElementById('lblLogout').innerText = t.logout;
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-user-shield"></i> ${t.mTitle}`;
+            document.getElementById('lblFormDisplay').innerText = t.fDisp;
+            document.getElementById('lblFormUser').innerText = t.fUser;
+            document.getElementById('lblFormEmail').innerText = t.fEmail;
+            document.getElementById('lblFormUID').innerText = t.fUid;
+            document.getElementById('lblFormNewPass').innerText = t.fNew;
+            document.getElementById('lblFormConfirmPass').innerText = t.fConf;
+            document.getElementById('confirmBtn').innerText = t.btnConf;
+
+            // إعادة جلب الاسم من الكاش أو الحساب لتحديث جملة الترحيب حسب اتجاه اللغة
+            const dName = document.getElementById('dropdownDisplayName').innerText;
+            if(dName !== "Loading...") {
+                document.getElementById('welcomeHeading').innerText = currentLang === 'ar' ? `أهلاً بك، ${dName} 👋` : `Welcome, ${dName} 👋`;
+            }
+        }
+
+        // 🛡️ جدار حماية الجلسة وفحص الحساب الفعلي بجوجل فايربيز
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const uid = user.uid; // الـ ID الفريد الثابت للربط السيرفرات والبوتات مستقبلاً
-                
-                // جلب اسم العرض واليوزر نيم من نود الـ users اللي سجلناها بالتفعيل
+                const uid = user.uid;
                 try {
                     const userRef = ref(db, 'users/' + uid);
                     const snapshot = await get(userRef);
                     
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-                        const dispName = userData.displayName || "مستخدم المستقبل";
+                        const dispName = userData.displayName || "Cloud User";
                         const uName = userData.username || "user";
 
-                        // عرض البيانات في السايد بار والترحيب الفوقي
-                        document.getElementById('sidebarName').innerText = dispName;
-                        document.getElementById('sidebarUser').innerText = "@" + uName;
-                        document.getElementById('welcomeHeading').innerText = `أهلاً بك، ${dispName} 👋`;
+                        // حقن البيانات في واجهة الهيدر والقائمة المنسدلة
+                        document.getElementById('topTriggerName').innerText = dispName.split(' ')[0];
+                        document.getElementById('dropdownDisplayName').innerText = dispName;
+                        document.getElementById('dropdownEmail').innerText = user.email;
+                        
+                        // الحرفين الأوائل للأفاتار السينمائي
+                        const initials = dispName.substring(0, 2).toUpperCase();
+                        document.getElementById('avatarCircle').innerText = initials;
+                        document.getElementById('dropdownAvatar').innerText = initials;
 
-                        // تعبئة بيانات المودال المنبثق للإعدادات
+                        // تعبئة المدخلات داخل شاشة الإعدادات
                         document.getElementById('modalDisplayName').value = dispName;
                         document.getElementById('modalUsername').value = "@" + uName;
                         document.getElementById('modalEmail').value = user.email;
-                        document.getElementById('modalUID').value = uid; // عرض الـ ID الخاص به
-                    } else {
-                        // كود احتياطي لو لسه معملش النود
-                        document.getElementById('sidebarName').innerText = user.displayName || "مستخدم المستقبل";
-                        document.getElementById('sidebarUser').innerText = "@" + user.email.split('@')[0];
+                        document.getElementById('modalUID').value = uid;
+
+                        // تحديث عنوان الترحيب الافتراضي بالإنجليزية
+                        document.getElementById('welcomeHeading').innerText = `Welcome, ${dispName} 👋`;
                     }
                 } catch (err) {
-                    console.error("Error fetching user cloud data:", err);
+                    console.error("Cloud Error fetching user record:", err);
                 }
-
-                // تشغيل رندر السيرفرات بالأيقونات العشوائية الفخمة
-                renderServers();
-
+                renderServersGrid();
             } else {
-                // طرد لو مش مسجل
-                window.location.href = 'index.html';
+                window.location.href = 'index.html'; // طرد الزوار غير المسجلين لقفل الواجهة
             }
         });
 
-        // 🎲 نظام توليد كروت السيرفرات بأيقونات عشوائية فخمة (ديسكورد / بوت)
-        function renderServers() {
+        // 🎲 رندر الكروت بأيقونات عشوائية فخمة (ديسكورد وبوت سيستم مضيء)
+        function renderServersGrid() {
             const container = document.getElementById('serversContainer');
-            
-            // داتا تجريبية محاكية للسيرفرات اللي هتنزل بعدين
-            const serversData = [
-                { id: 'bot-01', name: 'بوت العاب TEST', type: 'Node.js v20', ram: '42MB / 512MB', proxy: 'مفعّل 🌐', status: 'online', statusText: 'شغال 24/7' },
-                { id: 'script-02', name: 'بوت سيستم TEST', type: 'Python Script', ram: '0MB / 256MB', proxy: 'غير متصل ❌', status: 'offline', statusText: 'متوقف' },
-                { id: 'music-03', name: 'TEST', type: 'Node.js v20', ram: '110MB / 512MB', proxy: 'مفعّل 🌐', status: 'online', statusText: 'شغال 24/7' }
+            const sampleServers = [
+                { id: 'bot-01', nameEn: 'Future Protection Bot', nameAr: 'بوت حماية المستقبل', type: 'Node.js v20', ram: '42MB / 512MB', proxy: 'Active 🌐', proxyAr: 'مفعّل 🌐', status: 'online', textEn: 'Online 24/7', textAr: 'شغال 24/7' },
+                { id: 'script-02', nameEn: 'Proxy Name Checker', nameAr: 'سكربت فحص اليوزرات المطور', type: 'Python Script', ram: '0MB / 256MB', proxy: 'Disconnected ❌', proxyAr: 'غير متصل ❌', status: 'offline', textEn: 'Stopped', textAr: 'متوقف' },
+                { id: 'music-03', nameEn: 'EnzoMusic Premium', nameAr: 'إنزو ميوزك بوت الكوني', type: 'Node.js v20', ram: '112MB / 512MB', proxy: 'Active 🌐', proxyAr: 'مفعّل 🌐', status: 'online', textEn: 'Online 24/7', textAr: 'شغال 24/7' }
             ];
 
-            // مصفوفة الأيقونات الفخمة اللي طلبتها عشان تختار عشوائي لكل كارت
             const coolIcons = [
                 '<i class="fab fa-discord" style="color: #5865F2;"></i>',
                 '<i class="fas fa-robot" style="color: #00f3ff; text-shadow: 0 0 10px #00f3ff;"></i>'
             ];
 
-            container.innerHTML = ''; // تنظيف الكانتينر
-
-            serversData.forEach(server => {
-                // اختيار أيقونة عشوائية تكتيكية
+            container.innerHTML = '';
+            sampleServers.forEach(server => {
                 const randomIcon = coolIcons[Math.floor(Math.random() * coolIcons.length)];
-                
-                const cardHtml = `
-                    <div class="server-card">
-                        <div class="server-header">
-                            <div class="server-name">${randomIcon} ${server.name}</div>
-                            <span class="status-badge ${server.status === 'online' ? 'status-online' : 'status-offline'}">
-                                <i class="fas fa-circle"></i> ${server.statusText}
-                            </span>
-                        </div>
-                        <div class="server-body">
-                            <div class="server-info-item"><span>نوع الخادم:</span> <span>${server.type}</span></div>
-                            <div class="server-info-item"><span>استهلاك الذاكرة:</span> <span>${server.ram}</span></div>
-                            <div class="server-info-item"><span>البروكسي المتصل:</span> <span>${server.proxy}</span></div>
-                        </div>
-                        <div class="server-actions">
-                            <button class="action-btn btn-manage" onclick="goToServer('${server.id}')">
-                                <i class="fas fa-cog"></i> دخول وإدارة السيرفر
-                            </button>
-                        </div>
+                const card = document.createElement('div');
+                card.className = 'server-card';
+                card.innerHTML = `
+                    <div class="server-header">
+                        <div class="server-name">${randomIcon} <span class="srv-title" data-en="${server.nameEn}" data-ar="${server.nameAr}">${server.nameEn}</span></div>
+                        <span class="status-badge ${server.status === 'online' ? 'status-online' : 'status-offline'}">
+                            <i class="fas fa-circle"></i> <span data-en="${server.textEn}" data-ar="${server.textAr}">${server.textEn}</span>
+                        </span>
                     </div>
+                    <div class="server-body">
+                        <div class="server-info-item"><span class="lbl-type">Type:</span> <span>${server.type}</span></div>
+                        <div class="server-info-item"><span class="lbl-ram">RAM Usage:</span> <span>${server.ram}</span></div>
+                        <div class="server-info-item"><span class="lbl-proxy">Proxy:</span> <span data-en="${server.proxy}" data-ar="${server.proxyAr}">${server.proxy}</span></div>
+                    </div>
+                    <button class="btn-manage" onclick="goToServer('${server.id}')">
+                        <i class="fas fa-cog"></i> <span class="lbl-manage-btn">Manage</span>
+                    </button>
                 `;
-                container.innerHTML += cardHtml;
+                container.appendChild(card);
             });
+            updateGridLanguage();
         }
 
-        // ☰ فتح وإغلاق السايد بار تكتيكياً للهواتف والشاشات
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebarContainer = document.getElementById('sidebarContainer');
-        menuToggle.addEventListener('click', () => {
-            sidebarContainer.classList.toggle('active');
+        // تحديث لغة البيانات الداخلية للجريد عند الضغط على زر اللغات
+        function updateGridLanguage() {
+            document.querySelectorAll('.srv-title, .status-badge span, .server-info-item span[data-en]').forEach(el => {
+                el.innerText = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+            });
+            document.querySelectorAll('.lbl-type').forEach(el => el.innerText = currentLang === 'ar' ? 'نوع الخادم:' : 'Type:');
+            document.querySelectorAll('.lbl-ram').forEach(el => el.innerText = currentLang === 'ar' ? 'استهلاك الذاكرة:' : 'RAM Usage:');
+            document.querySelectorAll('.lbl-proxy').forEach(el => el.innerText = currentLang === 'ar' ? 'البروكسي المتصل:' : 'Proxy:');
+            document.querySelectorAll('.lbl-manage-btn').forEach(el => el.innerText = currentLang === 'ar' ? 'دخول وإدارة السيرفر' : 'Manage');
+        }
+
+        // الاستماع لزر اللغة لتحديث كروت السيرفرات مع الواجهة
+        document.getElementById('langToggleBtn').addEventListener('click', updateGridLanguage);
+
+        /* ── كود تحكم فتح الـ Dropdown والأنيميشن التكتيكي ── */
+        const profileBtn = document.getElementById('profileBtn');
+        const profilePanel = document.getElementById('profilePanel');
+
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = profilePanel.classList.contains('open');
+            if (!isOpen) {
+                profilePanel.classList.add('open');
+                profileBtn.classList.add('active');
+            } else {
+                profilePanel.classList.remove('open');
+                profileBtn.classList.remove('active');
+            }
         });
 
-        // ⚙️ التحكم في فتح وغلق نافذة الحساب المنبثقة
-        window.toggleSettingsModal = function(show) {
-            const modal = document.getElementById('settingsModal');
-            if(show) modal.classList.add('active');
-            else {
-                modal.classList.remove('active');
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
-                document.getElementById('confirmBtn').classList.remove('show-btn');
-            }
+        // إغلاق الدروب داون عند الضغط في أي مكان خارجي بالأيباد أو الموبايل
+        document.addEventListener('click', () => {
+            profilePanel.classList.remove('open');
+            profileBtn.classList.remove('active');
+        });
+
+        /* ── تفعيل النوافذ المنبثقة (Modals) ── */
+        window.openSettingsModal = function() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+        window.closeSettingsModal = function() {
+            document.getElementById('settingsModal').classList.remove('active');
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('confirmBtn').classList.remove('show-btn');
         }
 
-        // 🔒 إظهار زر الحفظ فقط لما يملأ خانات الباسورد الجديد وتكون متطابقة
         window.checkPasswordInputs = function() {
             const pass = document.getElementById('newPassword').value;
             const confirmPass = document.getElementById('confirmPassword').value;
-            const confirmBtn = document.getElementById('confirmBtn');
-
-            if (pass.length >= 6 && pass === confirmPass) {
-                confirmBtn.classList.add('show-btn');
-            } else {
-                confirmBtn.classList.remove('show-btn');
-            }
+            const btn = document.getElementById('confirmBtn');
+            if (pass.length >= 6 && pass === confirmPass) btn.classList.add('show-btn');
+            else btn.classList.remove('show-btn');
         }
 
-        // 🔄 تحديث الباسورد في الـ Auth الفعلي
         window.updateUserPassword = function() {
             const newPass = document.getElementById('newPassword').value;
-            const user = auth.currentUser;
-
-            if (user) {
-                updatePassword(user, newPass).then(() => {
-                    alert("تم تحديث كلمة المرور بنجاح يا غالي! 🔒");
-                    toggleSettingsModal(false);
-                }).catch((error) => {
-                    alert("خطأ أثناء التحديث: " + error.message + " (قد يتطلب منك إعادة تسجيل الدخول لتحديث الأمان)");
-                });
+            if (auth.currentUser) {
+                updatePassword(auth.currentUser, newPass).then(() => {
+                    alert(currentLang === 'ar' ? "تم تحديث الباسورد بنجاح! 🔒" : "Password updated successfully! 🔒");
+                    closeSettingsModal();
+                }).catch(err => alert(err.message));
             }
         }
 
-        // التنقل بين أزرار السايد بار
-        window.switchTab = function(tabName) {
-            console.log("تم الانتقال لـ: " + tabName);
-            // تكتيكياً يمكن شحن نودز تانية هنا
+        window.switchSection = function(sec) {
+            console.log("Section switched to: " + sec);
         }
 
-        // تسجيل الخروج
         window.handleLogout = function() {
-            signOut(auth).then(() => {
-                window.location.href = 'index.html';
-            });
+            signOut(auth).then(() => window.location.href = 'index.html');
         }
 
-        // دخول السيرفر الفردي
-        window.goToServer = function(serverId) {
-            alert("سيرفر ذكي! جاري الانتقال للوحة التحكم الداخلية للخادم: " + serverId);
+        window.goToServer = function(id) {
+            alert(currentLang === 'ar' ? "جاري الدخول لخادم: " + id : "Accessing instance: " + id);
         }
     </script>
 </body>
