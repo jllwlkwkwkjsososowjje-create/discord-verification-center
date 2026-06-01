@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <!-- كود الخطاف الصحيح لـ FontAwesome لضمان ظهور الأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -51,7 +51,7 @@
             padding-top: calc(var(--nav-h) + 20px);
         }
 
-        /* ── NAVBAR العلوي ذو الأبعاد الآمنة ──────────────────────────────── */
+        /* ── NAVBAR ──────────────────────────────── */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
             background: var(--bg-nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -75,6 +75,7 @@
         .icon-btn {
             position: relative; width: 36px; height: 36px; border-radius: var(--r);
             display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+            font-size: 16px;
         }
 
         .notif-dot { position: absolute; top: 8px; right: 8px; width: 6px; height: 6px; background: #ef4444; border-radius: 50%; }
@@ -96,7 +97,7 @@
         .chevron { font-size: 11px; color: var(--text-muted); transition: transform .3s; }
         .profile-trigger.active .chevron { transform: rotate(180deg); color: var(--accent); }
 
-        /* ── حل مشكلة الخروج خارج الشاشة للموبايل ────────────────────────── */
+        /* ── الـ Dropdown وحل مشكلة أبعاد الموبايل ────────────────────────── */
         .panel-wrap { position: relative; }
         .panel {
             position: absolute; top: calc(100% + 12px); right: 0; width: 280px;
@@ -127,14 +128,13 @@
         .menu-item:hover { background: var(--bg-hover); color: var(--accent); }
         .menu-item.danger:hover { background: var(--bg-danger); color: var(--text-danger); }
         
-        /* معالجة وحقن أيقونات واضحة */
         .item-icon { width: 26px; height: 26px; border-radius: 6px; background: rgba(255,255,255,0.04); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 13px; }
         .menu-item:hover .item-icon { color: inherit; }
         .item-text { flex: 1; }
         .item-label { display: block; font-size: 12px; font-weight: 600; }
         .item-sub { display: block; font-size: 10px; color: var(--text-muted); }
 
-        /* ── 🌟 مكون أزرار السوشيال ميديا المضيئة والمتمددة (FEZ Style) ── */
+        /* ── 🌟 أزرار السوشيال ميديا المضيئة والمتمددة (FEZ Style) ── */
         .social-container { margin: 20px 0 30px 0; width: 100%; display: flex; justify-content: flex-start; }
         .social-wrapper { display: flex; gap: 12px; padding: 15px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); width: 100%; overflow-x: auto; }
         
@@ -144,7 +144,7 @@
             color: #9d8dbb; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
             overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); flex-shrink: 0;
         }
-        .social-btn i { font-size: 18px; text-align: center; z-index: 2; transition: all 0.4s ease; }
+        .social-btn i { font-size: 18px; text-align: center; z-index: 2; transition: all 0.4s ease; display: inline-block; width: 20px; }
         .social-btn .btn-text { font-size: 13px; font-weight: 700; white-space: nowrap; margin-left: 10px; opacity: 0; z-index: 2; transform: translateX(-10px); transition: all 0.3s ease; }
         html[dir="rtl"] .social-btn .btn-text { margin-left: 0; margin-right: 10px; transform: translateX(10px); }
 
@@ -152,7 +152,7 @@
         .social-btn:hover .btn-text { opacity: 1; transform: translateX(0); }
         .social-btn:hover i { transform: rotate(360deg); }
 
-        /* الألوان الأصلية المضيئة المخصصة لكل منصة */
+        /* ألوان الهوفير والإضاءة الخلفية */
         .discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4); }
         .github:hover { background: #24292e; border-color: #333; box-shadow: 0 8px 20px rgba(255,255,255,0.1); }
         .youtube:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4); }
@@ -165,7 +165,7 @@
             .social-btn:hover { width: 120px; }
         }
 
-        /* الحاوية وباقي عناصر الجريد */
+        /* حاوية عناصر السيرفرات */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
         .welcome-section { margin-bottom: 20px; margin-top: 10px; }
         .welcome-msg { font-size: 26px; font-weight: 800; margin-bottom: 6px; border-left: 4px solid var(--accent); padding-left: 12px; }
@@ -185,7 +185,7 @@
         .server-info-item span:last-child { color: #fff; font-weight: 600; }
         .btn-manage { width: 100%; padding: 10px; border-radius: 8px; background: var(--accent); color: #000; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* ── النوافذ المنبثقة (Modals) ──────────────────────────────────── */
+        /* ── النوافذ المنبثقة ──────────────────────────────────── */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(4, 2, 10, 0.88); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; padding: 16px; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         .settings-modal { background: #0b071e; border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 16px; padding: 24px; width: 100%; max-width: 440px; transform: scale(0.95); transition: 0.3s; }
@@ -202,7 +202,7 @@
         .btn-confirm { width: 100%; padding: 10px; background: var(--accent); color: #000; border-radius: 6px; font-weight: 700; font-size: 14px; margin-top: 8px; display: none; }
         .btn-confirm.show-btn { display: block; }
 
-        /* كروت المطورين داخل نافذة السينما */
+        /* كروت المطورين */
         .dev-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
         .dev-card { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 12px; border-radius: 10px; }
         .dev-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--accent); }
@@ -213,7 +213,6 @@
 
 <body>
 
-    <!-- ── NAVBAR العلوي السحابي المطور ── -->
     <nav class="navbar">
         <a href="#" class="brand">
             <div class="brand-mark"><i class="fas fa-server"></i></div>
@@ -230,7 +229,6 @@
             </div>
             <div class="nav-divider"></div>
 
-            <!-- 👤 تريجر البروفايل المعالج للأجهزة المحمولة -->
             <div class="panel-wrap" id="profileWrap">
                 <button class="profile-trigger" id="profileBtn">
                     <div class="avatar" id="avatarCircle">FH</div>
@@ -238,7 +236,6 @@
                     <i class="fas fa-chevron-down chevron"></i>
                 </button>
 
-                <!-- قائمة الـ Dropdown التي تم إصلاح أبعادها للموبايل -->
                 <div class="panel" id="profilePanel">
                     <div class="panel-user">
                         <div class="panel-avatar" id="dropdownAvatar">FH</div>
@@ -259,7 +256,6 @@
                             </span>
                         </div>
 
-                        <!-- 🛠️ خيار إنشاء السيرفر المضاف حديثاً فوق الإعدادات علطول -->
                         <div class="menu-item" onclick="handleCreateServer()">
                             <div class="item-icon" style="color: var(--accent);"><i class="fas fa-plus-circle"></i></div>
                             <span class="item-text">
@@ -304,32 +300,26 @@
         </div>
     </nav>
 
-    <!-- ── حاوية المحتوى المركزي ── -->
     <main class="container">
         <div class="welcome-section">
             <h2 class="welcome-msg" id="welcomeHeading">Welcome to the future cloud 👋</h2>
             <p class="welcome-sub" id="welcomeSub">Here is a complete view of your active automated instances.</p>
         </div>
 
-        <!-- 🌟 إضافة أزرار السوشيال ميديا المتمددة (FEZ Style) تحت الترحيب وفوق أول سيرفر 🌟 -->
         <div class="social-container">
             <div class="social-wrapper">
-                <!-- ديسكورد الهوست الرسمي -->
                 <a href="https://discord.gg/ymNp8uGXm5" target="_blank" class="social-btn discord">
                     <i class="fab fa-discord"></i>
                     <span class="btn-text">Discord</span>
                 </a>
-                <!-- جيت هوب (عدل الرابط # وحط رابط حسابك هنا) -->
                 <a href="#" target="_blank" class="social-btn github">
                     <i class="fab fa-github"></i>
                     <span class="btn-text">GitHub</span>
                 </a>
-                <!-- يوتيوب (عدل الرابط # وحط رابط قناتك هنا) -->
                 <a href="#" target="_blank" class="social-btn youtube">
                     <i class="fab fa-youtube"></i>
                     <span class="btn-text">YouTube</span>
                 </a>
-                <!-- تيك توك الملون الجديد (عدل الرابط # وحط رابط حسابك هنا) -->
                 <a href="#" target="_blank" class="social-btn tiktok">
                     <i class="fab fa-tiktok"></i>
                     <span class="btn-text">TikTok</span>
@@ -338,11 +328,9 @@
         </div>
         
         <div class="servers-grid" id="serversContainer">
-            <!-- كروت السيرفرات تنزل هنا -->
-        </div>
+            </div>
     </main>
 
-    <!-- ── ⚙️ شاشة إعدادات الحساب الشخصي ── -->
     <div class="modal-overlay" id="settingsModal">
         <div class="settings-modal">
             <div class="modal-header">
@@ -359,7 +347,6 @@
         </div>
     </div>
 
-    <!-- ── 👨‍💻 شاشة عرض المطورين ومؤسسي الهوست (Developer Hub Modal) ── -->
     <div class="modal-overlay" id="devModal">
         <div class="settings-modal" style="max-width: 400px;">
             <div class="modal-header">
@@ -367,7 +354,6 @@
                 <button class="close-modal-btn" onclick="closeDevModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="dev-grid">
-                <!-- كارت مالك -->
                 <div class="dev-card">
                     <div class="dev-avatar"><i class="fas fa-crown"></i></div>
                     <div class="dev-info">
@@ -375,7 +361,6 @@
                         <p>Founder & Core Developer</p>
                     </div>
                 </div>
-                <!-- كارت وسيم -->
                 <div class="dev-card">
                     <div class="dev-avatar"><i class="fas fa-shield-alt"></i></div>
                     <div class="dev-info">
@@ -387,7 +372,6 @@
         </div>
     </div>
 
-    <!-- ── السكربتات والربط السحابي ── -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -419,7 +403,7 @@
             ar: {
                 toggleBtn: "English", welcome: "مرحباً بك في سحابة المستقبل 👋", sub: "إليك نظرة كاملة شاملة على خوادمك المؤتمتة النشطة ومواردك.",
                 dashOpts: "خيارات لوحة التحكم", sList: "قائمة السيرفرات", sSub: "إدارة السيرفرات الفعالة", accSet: "إعدادات الحساب", accSub: "تحديث الأمان والبروفايل",
-                devHub: "مركز التطوير المطور", devArea: "منطقة المطور", tools: "الأدوات والسكربتات", logout: "تسجيل الخروج",
+                devHub: "مركز التطوير", devArea: "منطقة المطور", tools: "الأدوات", logout: "تسجيل الخروج",
                 mTitle: "إعدادات الحساب الشخصي", fDisp: "اسم العرض الحقيقي", fUser: "اسم المستخدم الفريد", fEmail: "البريد الإلكتروني الحالي", fUid: "المعرف الفريد الثابت (UID)", fNew: "كلمة المرور الجديدة", fConf: "تأكيد كلمة المرور الجديدة", btnConf: "حفظ وتأكيد التغييرات",
                 createSrv: "أنشأ سيرفر", createSrvSub: "بناء وإطلاق خادم سحابي جديد", devTitle: "مؤسسي ومطوري الهوست"
             }
@@ -462,6 +446,7 @@
             if(dName !== "Loading...") {
                 document.getElementById('welcomeHeading').innerText = currentLang === 'ar' ? `أهلاً بك، ${dName} 👋` : `Welcome, ${dName} 👋`;
             }
+            updateGridLanguage();
         }
 
         onAuthStateChanged(auth, async (user) => {
@@ -538,8 +523,6 @@
             document.querySelectorAll('.lbl-manage-btn').forEach(el => el.innerText = currentLang === 'ar' ? 'دخول وإدارة السيرفر' : 'Manage');
         }
 
-        document.getElementById('langToggleBtn').addEventListener('click', updateGridLanguage);
-
         const profileBtn = document.getElementById('profileBtn');
         const profilePanel = document.getElementById('profilePanel');
 
@@ -562,7 +545,6 @@
             document.getElementById('confirmBtn').classList.remove('show-btn');
         }
 
-        /* ── النوافذ الخاصة بالمطورين وإنشاء السيرفرات ── */
         window.openDevModal = function() { document.getElementById('devModal').classList.add('active'); }
         window.closeDevModal = function() { document.getElementById('devModal').classList.remove('active'); }
 
