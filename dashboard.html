@@ -73,12 +73,7 @@
             overflow-y: auto; 
             border: 1px solid rgba(255,255,255,0.08); 
         }
-        .suggestion-item { padding: 12px 15px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 13px; }
-        .suggestion-item:hover { background: rgba(88, 101, 242, 0.1); color: var(--accent-color); }
 
-        .theme-toggle, .btn-action { background: none; border: none; color: var(--text-color); font-size: 18px; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .theme-toggle:hover { background-color: rgba(255,255,255,0.08); }
-        
         .main-layout {
             display: flex;
             flex-direction: row;
@@ -278,6 +273,7 @@
         let secondsCounter = 0;
 
         window.onload = function() {
+            // 🔒 حماية التوجيه: لو مش مسجل ارميه برة فوراً
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             let accessToken = fragment.get('access_token');
             
@@ -289,9 +285,15 @@
             }
 
             if (!accessToken) {
-                window.location.href = "index.html";
+                window.location.replace("index.html");
                 return;
             }
+
+            // 🚫 منع أزرار الرجوع والتليفون طول ما هو مسجل
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function() {
+                window.history.pushState(null, null, window.location.href);
+            };
 
             fetchUserProfileData(accessToken);
             renderSharedGuildIcons(accessToken);
@@ -316,10 +318,9 @@
 
         function handleLogout() {
             localStorage.removeItem('discord_token');
-            window.location.href = "index.html";
+            window.location.replace("index.html");
         }
 
-        // 🔍 محرك البحث المعدل بالكامل ليعمل بشكل حيوي ومباشر
         document.getElementById('searchInp').addEventListener('keypress', function(ev) {
             if (ev.key === 'Enter') {
                 executeSearch(this.value);
@@ -330,6 +331,7 @@
             executeSearch(document.getElementById('searchInp').value);
         }
 
+        // 🔍 البحث: يعرض الفيديوهات تحت كروت بدون تشغيل تلقائي
         async function executeSearch(queryText) {
             let textValue = queryText.trim();
             if(!textValue) return;
@@ -341,26 +343,22 @@
                 return;
             }
             
-            // تمكين البحث الفوري عبر جلب الرابط المباشر
             let videoId = extractYouTubeId(textValue);
             if(videoId) {
-                playTrack("YouTube Video Stream", "Direct URL", videoId);
+                displaySearchResults([{ title: "Direct Link Video", author: "YouTube Link", id: videoId }]);
                 return;
             }
 
-            // إرسال النص إلى الـ API الفعلي للبوت لجلب النتائج الحية من اليوتيوب
             try {
                 const res = await fetch(`http://localhost:3000/api/player/search?query=${encodeURIComponent(textValue)}`);
                 const tracks = await res.json();
                 if (Array.isArray(tracks) && tracks.length > 0) {
                     displaySearchResults(tracks);
                 } else {
-                    alert("No active results found on YouTube api.");
+                    alert("No results returned from Bot Backend API.");
                 }
             } catch (err) {
-                console.error("Search API Error:", err);
-                // Fallback ذكي للعرض في حالة اختبار الواجهات بدون backend
-                playTrack(textValue, "YouTube Result", "dQw4w9WgXcQ");
+                console.error("Search Backend API Error:", err);
             }
         }
 
@@ -376,7 +374,7 @@
             grid.innerHTML = "";
             tracks.forEach(track => {
                 grid.innerHTML += `
-                    <div class="video-card-thumb" onclick="playTrack('${track.title.replace(/'/g, "\\'")}', '${track.author.replace(/'/g, "\\'")}', '${track.id}')">
+                    <div class="video-card-thumb" onclick="playTrack('${track.title.replace(/'/g, "\\'")}', '${track.author ? track.author.replace(/'/g, "\\'") : 'YouTube Stream'}', '${track.id}')">
                         <div class="thumb-img-holder">
                             <img src="${track.thumbnail || `https://img.youtube.com/vi/${track.id}/hqdefault.jpg`}">
                         </div>
@@ -392,7 +390,7 @@
             document.getElementById('currentTrackTitle').innerText = title;
             document.getElementById('currentTrackAuthor').innerText = author;
             
-            isLiked = false; isDisliked = false; likeCount = Math.floor(Math.random() * 300) + 5;
+            isLiked = false; isDisliked = false; likeCount = Math.floor(Math.random() * 200) + 5;
             document.getElementById('btnLike').classList.remove('active');
             document.getElementById('btnDislike').classList.remove('active');
             document.getElementById('likeCountNum').innerText = likeCount;
@@ -417,7 +415,7 @@
             } catch (err) { console.error("Bot Play API Error:", err); }
         }
 
-        // 🧠 جلب كافة السيرفرات دون اشتراط أي صلاحيات إدارية للأعضاء
+        // 🖥️ جلب السيرفرات المشتركة الحقيقية حشرياً ورسمياً من الـ Backend بتاع البوت فقط
         async function renderSharedGuildIcons(token) {
             const sidebar = document.getElementById('guildsSidebarRail');
             try {
@@ -427,26 +425,16 @@
                     body: JSON.stringify({ token: token })
                 });
                 const data = await response.json();
-                if(data.guilds && data.guilds.length > 0) {
+                
+                // البوت هيرجع مصفوفة السيرفرات اللي هو موجود فيها مع العضو سوياً وبدون شروط صلاحيات
+                if(data.guilds && Array.isArray(data.guilds)) {
                     buildGuildsUI(data.guilds);
-                    return;
-                }
-            } catch(e) { console.log("Direct Backend failed, pulling all client guilds."); }
-
-            // جلب كامل السيرفرات من ديسكورد مباشرة دون تصفية الصلاحيات
-            try {
-                const res = await fetch('https://discord.com/api/v10/users/@me/guilds', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const guilds = await res.json();
-                if(Array.isArray(guilds)) {
-                    // تم إلغاء شرط الـ permissions & 0x8 نهائياً ليتم عرض كل السيرفرات المشتركة
-                    buildGuildsUI(guilds);
                 } else {
-                    sidebar.innerHTML = `<div class="no-servers-placeholder">No Servers Found</div>`;
+                    sidebar.innerHTML = `<div class="no-servers-placeholder">No Shared Servers Found</div>`;
                 }
             } catch(err) {
-                sidebar.innerHTML = `<div class="no-servers-placeholder">Connection Error</div>`;
+                console.error("Critical Backend shared-guilds connection error:", err);
+                sidebar.innerHTML = `<div class="no-servers-placeholder">Backend API Off</div>`;
             }
         }
 
