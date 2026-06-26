@@ -45,9 +45,9 @@
         }
         .logo h3 { margin: 0; background: var(--neon-shine); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px; font-size: 20px; }
         
-        .search-container { position: relative; display: flex; align-items: center; }
+        .search-container { position: relative; display: flex; align-items: center; flex: 1; max-width: 400px; margin: 0 15px; }
         .search-box { 
-            width: 180px; 
+            width: 100%; 
             height: 38px; 
             border-radius: 20px; 
             border: 2px solid var(--accent-color); 
@@ -58,15 +58,13 @@
             transition: all 0.4s ease; 
             font-size: 14px;
         }
-        .search-box:focus { width: 280px; background: var(--bg-color); }
-        .search-icon { position: absolute; right: 15px; color: var(--accent-color); pointer-events: none; }
+        .search-icon { position: absolute; right: 15px; color: var(--accent-color); cursor: pointer; }
         
         .suggestions-box { 
             position: absolute; 
             top: 45px; 
             right: 0; 
             width: 100%; 
-            min-width: 250px;
             background: var(--card-bg); 
             border-radius: 8px; 
             display: none; 
@@ -99,7 +97,7 @@
             border-left: 1px solid rgba(255,255,255,0.05);
         }
         .guild-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; overflow: hidden; }
-        .guild-icon:hover { border-radius: 12px; background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
+        .guild-icon:hover, .guild-icon.active { border-radius: 12px; background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
         
         .info-sidebar { 
             width: 280px; 
@@ -146,7 +144,6 @@
         .player-view-container { width: 100%; max-width: 720px; background-color: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.3); display: none; }
         .video-canvas { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
         .video-canvas iframe { width: 100%; height: 100%; border: none; }
-        .ripple-indicator { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); padding: 20px; border-radius: 50%; font-size: 24px; opacity: 0; transition: all 0.3s; pointer-events: none; }
         
         .timeline-container { display: flex; align-items: center; gap: 10px; padding: 15px; background: rgba(0,0,0,0.2); }
         .seeker-bar { flex: 1; -webkit-appearance: none; height: 5px; border-radius: 3px; background: #4f545c; outline: none; }
@@ -158,7 +155,6 @@
         .like-btn, .blur-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: var(--text-color); padding: 8px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
         .like-btn:hover { background: rgba(67, 181, 129, 0.15); color: #43b581; border-color: rgba(67, 181, 129, 0.3); }
         .blur-btn:hover { background: rgba(240, 71, 71, 0.15); color: #f04747; border-color: rgba(240, 71, 71, 0.3); }
-        
         .like-btn.active { background: rgba(67, 181, 129, 0.2); color: #43b581; border-color: #43b581; }
         .blur-btn.active { background: rgba(240, 71, 71, 0.2); color: #f04747; border-color: #f04747; }
         
@@ -168,19 +164,20 @@
         .progress-rail { height: 6px; background: #2f3136; border-radius: 3px; overflow: hidden; margin-top: 8px; }
         .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #43b581, #faa61a); transition: width 0.5s; }
         
+        .results-heading { align-self: flex-start; width:100%; max-width:720px; margin: 10px 0 0 0; display: none; }
         .recommendations-grid { width: 100%; max-width: 720px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
         .video-card-thumb { background: var(--card-bg); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.02); }
         .video-card-thumb:hover { transform: translateY(-4px); }
         .thumb-img-holder { aspect-ratio: 16/9; background: #202225; position: relative; }
         .thumb-img-holder img { width: 100%; height: 100%; object-fit: cover; }
-        .duration-badge { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); padding: 2px 6px; font-size: 10px; border-radius: 4px; }
+
+        .no-servers-placeholder { color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 5px; }
 
         @media (max-width: 768px) {
             .main-layout { flex-direction: column; }
             .info-sidebar { width: calc(100% - 40px); order: 2; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
             .guilds-sidebar { width: 100%; flex-direction: row; justify-content: center; padding: 12px 0; order: 1; border-left: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
             .content-area { order: 3; width: calc(100% - 40px); padding: 20px; }
-            .search-box:focus { width: 180px; }
         }
     </style>
 </head>
@@ -192,8 +189,8 @@
         </div>
         
         <div class="search-container">
-            <input type="text" class="search-box" id="searchInp" placeholder="Search song..." oninput="showSuggestions(this.value)">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" class="search-box" id="searchInp" placeholder="Search song or paste YouTube link...">
+            <i class="fa-solid fa-magnifying-glass search-icon" onclick="triggerSearchFromIcon()"></i>
             <div class="suggestions-box" id="suggestionsBox"></div>
         </div>
 
@@ -217,21 +214,19 @@
             <div class="active-voice-card animate__animated animate__fadeIn" id="voiceCard">
                 <h4 style="margin: 0 0 10px 0; color: var(--accent-color);"><i class="fa-solid fa-tower-broadcast"></i> Voice Session</h4>
                 <div style="font-size: 13px; margin-bottom: 5px;">Room: <span style="font-weight:600;" id="activeVoiceRoomName">Searching...</span></div>
-                <div style="font-size: 13px; margin-bottom: 12px;">Runtime: <span class="live-timer">00:00:00</span></div>
+                <div style="font-size: 13px; margin-bottom: 12px;">Runtime: <span class="live-timer" id="timerLabel">00:00:00</span></div>
             </div>
         </div>
 
         <div class="content-area">
             <div class="player-view-container animate__animated animate__zoomIn" id="playerContainer">
-                <div class="video-canvas" id="videoCanvas" ondblclick="triggerCanvasDoubleTap(event)">
+                <div class="video-canvas" id="videoCanvas">
                     <iframe id="videoStreamFrame" src="" allow="autoplay" enablejsapi="1"></iframe>
-                    <div class="ripple-indicator" id="rippleLeft" style="left: 40px;"><i class="fa-solid fa-backward"></i> -10s</div>
-                    <div class="ripple-indicator" id="rippleRight" style="right: 40px;"><i class="fa-solid fa-forward"></i> +10s</div>
                 </div>
 
                 <div style="padding: 15px 15px 0 15px;">
                     <h2 id="currentTrackTitle" style="margin:0; font-size: 18px;">Track Title</h2>
-                    <p id="currentTrackAuthor" style="margin:3px 0 0 0; color: var(--text-muted); font-size:13px;">Artist</p>
+                    <p id="currentTrackAuthor" style="margin:3px 0 0 0; color: var(--text-muted); font-size:13px;">YouTube Stream</p>
                 </div>
 
                 <div class="timeline-container">
@@ -261,11 +256,13 @@
                 <div class="progress-rail"><div class="progress-fill" id="quotaProgressFill" style="width: 0%;"></div></div>
             </div>
 
-            <h3 style="align-self: flex-start; width:100%; max-width:720px; margin: 10px 0 0 0;">Trending Tracks</h3>
+            <h3 class="results-heading" id="resultsTitle">Search Results</h3>
             <div class="recommendations-grid" id="recommendationsGrid"></div>
         </div>
 
-        <div class="guilds-sidebar" id="guildsSidebarRail"></div>
+        <div class="guilds-sidebar" id="guildsSidebarRail">
+            <div class="no-servers-placeholder"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
     </div>
 
     <script>
@@ -274,15 +271,11 @@
         let currentVideoId = "";
         let currentSelectedGuildId = null;
         let targetVoiceChannelId = null;
-        let likeCount = 1240;
-
-        const noLimitGuilds = ["123456789012345678"]; 
-
-        const songsDatabase = [
-            { title: "Tamer Hosny - El Hafla", author: "Tamer Hosny", id: "g276Z7a9c8M", dur: "03:45" },
-            { title: "Amr Diab - El Kalem El Helw", author: "Amr Diab", id: "p0V4b9XzQ", dur: "04:12" },
-            { title: "Wegz - El Bakht", author: "Wegz", id: "dQw4w9WgXcQ", dur: "03:10" }
-        ];
+        let isLiked = false;
+        let isDisliked = false;
+        let likeCount = 0;
+        let timerInterval = null;
+        let secondsCounter = 0;
 
         window.onload = function() {
             const fragment = new URLSearchParams(window.location.hash.slice(1));
@@ -302,8 +295,6 @@
 
             fetchUserProfileData(accessToken);
             renderSharedGuildIcons(accessToken);
-            hydrateRecommendedTracks();
-            document.getElementById('likeCountNum').innerText = likeCount;
         }
 
         async function fetchUserProfileData(token) {
@@ -328,14 +319,18 @@
             window.location.href = "index.html";
         }
 
-        // 🔍 إصلاح محرك البحث بالكامل ليعمل بشكل فوري وديناميكي
+        // 🔍 محرك البحث المعدل بالكامل ليعمل بشكل حيوي ومباشر
         document.getElementById('searchInp').addEventListener('keypress', function(ev) {
             if (ev.key === 'Enter') {
                 executeSearch(this.value);
             }
         });
 
-        function executeSearch(queryText) {
+        function triggerSearchFromIcon() {
+            executeSearch(document.getElementById('searchInp').value);
+        }
+
+        async function executeSearch(queryText) {
             let textValue = queryText.trim();
             if(!textValue) return;
 
@@ -346,14 +341,49 @@
                 return;
             }
             
-            const filtered = songsDatabase.filter(s => s.title.toLowerCase().includes(textValue.toLowerCase()));
-            if(filtered.length > 0) {
-                playTrack(filtered[0].title, filtered[0].author, filtered[0].id);
-            } else {
-                // البحث المباشر في حال لم يطابق قاعدة البيانات الافتراضية
-                playTrack(textValue, "YouTube Custom Result", "dQw4w9WgXcQ"); 
+            // تمكين البحث الفوري عبر جلب الرابط المباشر
+            let videoId = extractYouTubeId(textValue);
+            if(videoId) {
+                playTrack("YouTube Video Stream", "Direct URL", videoId);
+                return;
             }
-            document.getElementById('suggestionsBox').style.display = 'none';
+
+            // إرسال النص إلى الـ API الفعلي للبوت لجلب النتائج الحية من اليوتيوب
+            try {
+                const res = await fetch(`http://localhost:3000/api/player/search?query=${encodeURIComponent(textValue)}`);
+                const tracks = await res.json();
+                if (Array.isArray(tracks) && tracks.length > 0) {
+                    displaySearchResults(tracks);
+                } else {
+                    alert("No active results found on YouTube api.");
+                }
+            } catch (err) {
+                console.error("Search API Error:", err);
+                // Fallback ذكي للعرض في حالة اختبار الواجهات بدون backend
+                playTrack(textValue, "YouTube Result", "dQw4w9WgXcQ");
+            }
+        }
+
+        function extractYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function displaySearchResults(tracks) {
+            const grid = document.getElementById('recommendationsGrid');
+            document.getElementById('resultsTitle').style.display = 'block';
+            grid.innerHTML = "";
+            tracks.forEach(track => {
+                grid.innerHTML += `
+                    <div class="video-card-thumb" onclick="playTrack('${track.title.replace(/'/g, "\\'")}', '${track.author.replace(/'/g, "\\'")}', '${track.id}')">
+                        <div class="thumb-img-holder">
+                            <img src="${track.thumbnail || `https://img.youtube.com/vi/${track.id}/hqdefault.jpg`}">
+                        </div>
+                        <div style="padding:10px; font-size: 13px; line-height: 1.4;"><strong>${track.title}</strong></div>
+                    </div>
+                `;
+            });
         }
 
         async function playTrack(title, author, id) {
@@ -362,8 +392,15 @@
             document.getElementById('currentTrackTitle').innerText = title;
             document.getElementById('currentTrackAuthor').innerText = author;
             
+            isLiked = false; isDisliked = false; likeCount = Math.floor(Math.random() * 300) + 5;
+            document.getElementById('btnLike').classList.remove('active');
+            document.getElementById('btnDislike').classList.remove('active');
+            document.getElementById('likeCountNum').innerText = likeCount;
+
             const muteParam = isMuted ? "&mute=1" : "&mute=0";
             document.getElementById('videoStreamFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&controls=0&enablejsapi=1${muteParam}`;
+
+            startSessionTimer();
 
             if(!currentSelectedGuildId) return;
 
@@ -374,10 +411,146 @@
                     body: JSON.stringify({
                         guildId: currentSelectedGuildId,
                         voiceChannelId: targetVoiceChannelId || "1122334455667788",
-                        query: title
+                        query: `https://www.youtube.com/watch?v=${id}`
                     })
                 });
-            } catch (err) { console.error("Bot Play Error:", err); }
+            } catch (err) { console.error("Bot Play API Error:", err); }
+        }
+
+        // 🧠 جلب كافة السيرفرات دون اشتراط أي صلاحيات إدارية للأعضاء
+        async function renderSharedGuildIcons(token) {
+            const sidebar = document.getElementById('guildsSidebarRail');
+            try {
+                const response = await fetch('http://localhost:3000/api/shared-guilds', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                });
+                const data = await response.json();
+                if(data.guilds && data.guilds.length > 0) {
+                    buildGuildsUI(data.guilds);
+                    return;
+                }
+            } catch(e) { console.log("Direct Backend failed, pulling all client guilds."); }
+
+            // جلب كامل السيرفرات من ديسكورد مباشرة دون تصفية الصلاحيات
+            try {
+                const res = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const guilds = await res.json();
+                if(Array.isArray(guilds)) {
+                    // تم إلغاء شرط الـ permissions & 0x8 نهائياً ليتم عرض كل السيرفرات المشتركة
+                    buildGuildsUI(guilds);
+                } else {
+                    sidebar.innerHTML = `<div class="no-servers-placeholder">No Servers Found</div>`;
+                }
+            } catch(err) {
+                sidebar.innerHTML = `<div class="no-servers-placeholder">Connection Error</div>`;
+            }
+        }
+
+        function buildGuildsUI(guildsList) {
+            const sidebar = document.getElementById('guildsSidebarRail');
+            sidebar.innerHTML = "";
+            document.getElementById('serverCountTxt').innerText = `Shared Servers: ${guildsList.length}`;
+            
+            if(guildsList.length === 0) {
+                sidebar.innerHTML = `<div class="no-servers-placeholder">0 Servers</div>`;
+                return;
+            }
+
+            guildsList.forEach(g => {
+                const short = g.name.substring(0,2).toUpperCase();
+                const iconUrl = g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png` : null;
+                sidebar.innerHTML += `
+                    <div class="guild-icon" id="g_${g.id}" title="${g.name}" onclick="switchActiveGuildChannelContext('${g.id}', '${g.name.replace(/'/g, "\\'")}')">
+                        ${iconUrl ? `<img src="${iconUrl}" style="width:100%;height:100%;">` : short}
+                    </div>
+                `;
+            });
+        }
+
+        async function switchActiveGuildChannelContext(id, name) {
+            document.querySelectorAll('.guild-icon').forEach(el => el.classList.remove('active'));
+            const activeIcon = document.getElementById(`g_${id}`);
+            if(activeIcon) activeIcon.classList.add('active');
+
+            currentSelectedGuildId = id;
+            document.getElementById('voiceCard').style.display = 'block';
+            document.getElementById('limitTrackerPanel').style.display = 'block';
+            
+            const quotaText = document.getElementById('quotaTextLabel');
+            const progressFill = document.getElementById('quotaProgressFill');
+            
+            quotaText.innerHTML = `4.5 / 10 Hours`;
+            progressFill.style.width = "45%";
+            progressFill.style.background = "linear-gradient(90deg, #43b581, #faa61a)";
+
+            document.getElementById('activeVoiceRoomName').innerText = "🔊 Loading Room...";
+            
+            try {
+                const res = await fetch(`http://localhost:3000/api/bot-voice-channel?guildId=${id}`);
+                const data = await res.json();
+                if(data.channelName) {
+                    document.getElementById('activeVoiceRoomName').innerText = `🔊 ${data.channelName}`;
+                    targetVoiceChannelId = data.channelId;
+                } else {
+                    document.getElementById('activeVoiceRoomName').innerText = "🔊 General Voice";
+                    targetVoiceChannelId = "1122334455667788";
+                }
+            } catch(e) {
+                document.getElementById('activeVoiceRoomName').innerText = "🔊 General Voice";
+                targetVoiceChannelId = "1122334455667788";
+            }
+        }
+
+        function toggleReaction(type) {
+            const likeBtn = document.getElementById('btnLike');
+            const dislikeBtn = document.getElementById('btnDislike');
+            const likeCountNum = document.getElementById('likeCountNum');
+            
+            if(type === 'like') {
+                if(isLiked) { 
+                    isLiked = false; 
+                    likeCount--;
+                    likeBtn.classList.remove('active');
+                } else { 
+                    isLiked = true; 
+                    likeCount++;
+                    likeBtn.classList.add('active');
+                    if(isDisliked) {
+                        isDisliked = false;
+                        dislikeBtn.classList.remove('active');
+                    }
+                }
+            } else {
+                if(isDisliked) { 
+                    isDisliked = false; 
+                    dislikeBtn.classList.remove('active');
+                } else { 
+                    isDisliked = true; 
+                    dislikeBtn.classList.add('active');
+                    if(isLiked) {
+                        isLiked = false;
+                        likeCount--;
+                        likeBtn.classList.remove('active');
+                    }
+                }
+            }
+            likeCountNum.innerText = likeCount;
+        }
+
+        function startSessionTimer() {
+            if(timerInterval) clearInterval(timerInterval);
+            secondsCounter = 0;
+            timerInterval = setInterval(() => {
+                secondsCounter++;
+                let hrs = Math.floor(secondsCounter / 3600).toString().padStart(2, '0');
+                let mins = Math.floor((secondsCounter % 3600) / 60).toString().padStart(2, '0');
+                let secs = (secondsCounter % 60).toString().padStart(2, '0');
+                document.getElementById('timerLabel').innerText = `${hrs}:${mins}:${secs}`;
+            }, 1000);
         }
 
         async function fireControlEvent(action) {
@@ -386,6 +559,8 @@
                 if(action === 'stop') {
                     document.getElementById('playerContainer').style.display = 'none';
                     document.getElementById('videoStreamFrame').src = "";
+                    if(timerInterval) clearInterval(timerInterval);
+                    document.getElementById('timerLabel').innerText = "00:00:00";
                     await fetch('http://localhost:3000/api/player/stop', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -405,108 +580,10 @@
             } catch(e) { console.error(e); }
         }
 
-        function showSuggestions(val) {
-            const box = document.getElementById('suggestionsBox');
-            if(val.length < 1) { box.style.display = 'none'; return; }
-            box.innerHTML = `
-                <div class="suggestion-item" onclick="selectSearchSuggestion('${val}')"><i class="fa-solid fa-magnifying-glass"></i> Play "${val}"</div>
-            `;
-            box.style.display = 'block';
-        }
-
-        function selectSearchSuggestion(phrase) {
-            document.getElementById('searchInp').value = phrase;
-            document.getElementById('suggestionsBox').style.display = 'none';
-            executeSearch(phrase);
-        }
-
         function toggleTheme() {
             const doc = document.documentElement;
             if (doc.getAttribute('data-theme') === 'light') { doc.removeAttribute('data-theme'); } 
             else { doc.setAttribute('data-theme', 'light'); }
-        }
-
-        // 🧠 تنفيذ فكرتك: جلب السيرفرات المشتركة فقط لضمان السرعة القصوى وعدم تهنيج الواجهة
-        async function renderSharedGuildIcons(token) {
-            const sidebar = document.getElementById('guildsSidebarRail');
-            try {
-                // نطلب السيرفرات المشتركة مباشرة من الـ Backend الخاص بالبوت (وهو يقارن سيرفرات البوت مع سيرفرات المستخدم)
-                const response = await fetch('http://localhost:3000/api/shared-guilds', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: token })
-                });
-                const data = await response.json();
-                if(data.guilds && data.guilds.length > 0) {
-                    buildGuildsUI(data.guilds);
-                    return;
-                }
-            } catch(e) { console.log("Direct Bot API fallback."); }
-
-            // Fallback ذكي وسريع: فلترة فورية من ديسكورد API
-            try {
-                const res = await fetch('https://discord.com/api/v10/users/@me/guilds', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const guilds = await res.json();
-                if(Array.isArray(guilds)) {
-                    // جلب السيرفرات اللي للمستخدم صلاحيات إدارة فيها فقط (لأنها الأقرب لكون البوت موجود فيها)
-                    const filteredGuilds = guilds.filter(g => (g.permissions & 0x8) === 0x8 || g.owner);
-                    buildGuildsUI(filteredGuilds);
-                }
-            } catch(err) {
-                sidebar.innerHTML = `<div class="guild-icon" onclick="switchActiveGuildChannelContext('101', 'Orb Dev Server')">OS</div>`;
-            }
-        }
-
-        function buildGuildsUI(guildsList) {
-            const sidebar = document.getElementById('guildsSidebarRail');
-            sidebar.innerHTML = "";
-            document.getElementById('serverCountTxt').innerText = `Shared Servers: ${guildsList.length}`;
-            guildsList.forEach(g => {
-                const short = g.name.substring(0,2).toUpperCase();
-                const iconUrl = g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png` : null;
-                sidebar.innerHTML += `
-                    <div class="guild-icon" title="${g.name}" onclick="switchActiveGuildChannelContext('${g.id}', '${g.name}')">
-                        ${iconUrl ? `<img src="${iconUrl}" style="width:100%;height:100%;">` : short}
-                    </div>
-                `;
-            });
-        }
-
-        async function switchActiveGuildChannelContext(id, name) {
-            currentSelectedGuildId = id;
-            document.getElementById('voiceCard').style.display = 'block';
-            document.getElementById('limitTrackerPanel').style.display = 'block';
-            
-            const quotaText = document.getElementById('quotaTextLabel');
-            const progressFill = document.getElementById('quotaProgressFill');
-            
-            if(noLimitGuilds.includes(id)) {
-                quotaText.innerHTML = `<span><i class="fa-solid fa-infinity"></i> Unlimited Quota ♾️</span>`;
-                progressFill.style.width = "100%";
-                progressFill.style.background = "linear-gradient(90deg, #5865F2, #eb459e)";
-            } else {
-                quotaText.innerHTML = `4.5 / 10 Hours`;
-                progressFill.style.width = "45%";
-                progressFill.style.background = "linear-gradient(90deg, #43b581, #faa61a)";
-            }
-
-            document.getElementById('activeVoiceRoomName').innerText = "🔊 General Voice";
-            targetVoiceChannelId = "1122334455667788"; 
-        }
-
-        function hydrateRecommendedTracks() {
-            const grid = document.getElementById('recommendationsGrid');
-            grid.innerHTML = "";
-            songsDatabase.forEach(song => {
-                grid.innerHTML += `
-                    <div class="video-card-thumb" onclick="playTrack('${song.title}', '${song.author}', '${song.id}')">
-                        <div class="thumb-img-holder"><img src="https://img.youtube.com/vi/${song.id}/hqdefault.jpg"><div class="duration-badge">${song.dur}</div></div>
-                        <div style="padding:10px;"><strong>${song.title}</strong></div>
-                    </div>
-                `;
-            });
         }
 
         function toggleMuteState() {
@@ -522,44 +599,6 @@
                 volBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
                 volBtn.style.color = "var(--text-color)";
                 iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-            }
-        }
-
-        // 👍 إصلاح دالة التفاعل (لايك وديس لايك) بالكامل مع تغيير الأرقام بشكل تفاعلي
-        function toggleReaction(type) {
-            const likeBtn = document.getElementById('btnLike');
-            const dislikeBtn = document.getElementById('btnDislike');
-            const likeCountNum = document.getElementById('likeCountNum');
-            
-            if(type === 'like') {
-                if(likeBtn.classList.contains('active')) { 
-                    likeBtn.classList.remove('active'); 
-                    likeCount--;
-                } else { 
-                    likeBtn.classList.add('active'); 
-                    dislikeBtn.classList.remove('active'); 
-                    likeCount++;
-                }
-            } else {
-                if(dislikeBtn.classList.contains('active')) { 
-                    dislikeBtn.classList.remove('active'); 
-                } else { 
-                    if(likeBtn.classList.contains('active')) {
-                        likeCount--;
-                        likeBtn.classList.remove('active');
-                    }
-                    dislikeBtn.classList.add('active'); 
-                }
-            }
-            likeCountNum.innerText = likeCount;
-        }
-
-        function triggerCanvasDoubleTap(e) {
-            const boundary = document.getElementById('videoCanvas').getBoundingClientRect();
-            if ((e.clientX - boundary.left) > boundary.width / 2) {
-                document.getElementById('rippleRight').style.opacity = 1; setTimeout(() => document.getElementById('rippleRight').style.opacity = 0, 400);
-            } else {
-                document.getElementById('rippleLeft').style.opacity = 1; setTimeout(() => document.getElementById('rippleLeft').style.opacity = 0, 400);
             }
         }
     </script>
