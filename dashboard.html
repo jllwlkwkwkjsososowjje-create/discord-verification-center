@@ -33,7 +33,6 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر المتجاوب */
         .navbar { 
             display: flex; 
             justify-content: space-between; 
@@ -46,7 +45,6 @@
         }
         .logo h3 { margin: 0; background: var(--neon-shine); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 10px; font-size: 20px; }
         
-        /* 🔥 حل مشكلة تداخل وصغر حجم البحث */
         .search-container { position: relative; display: flex; align-items: center; }
         .search-box { 
             width: 180px; 
@@ -83,14 +81,12 @@
         .theme-toggle, .btn-action { background: none; border: none; color: var(--text-color); font-size: 18px; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .theme-toggle:hover { background-color: rgba(255,255,255,0.08); }
         
-        /* تقسيم مرن يمنع التداخل نهائياً */
         .main-layout {
             display: flex;
             flex-direction: row;
             min-height: calc(100vh - 65px);
         }
 
-        /* قائمة السيرفرات اليمين */
         .guilds-sidebar { 
             width: 75px; 
             background-color: var(--sidebar-bg); 
@@ -102,10 +98,9 @@
             order: 3;
             border-left: 1px solid rgba(255,255,255,0.05);
         }
-        .guild-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; }
+        .guild-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.3s; border: 2px solid transparent; cursor: pointer; overflow: hidden; }
         .guild-icon:hover { border-radius: 12px; background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
         
-        /* القائمة الشمال: الحساب والاتصال */
         .info-sidebar { 
             width: 280px; 
             background-color: var(--sidebar-bg); 
@@ -120,7 +115,6 @@
         .user-banner { height: 55px; width: 100%; position: absolute; top: 0; left: 0; background: var(--accent-color); }
         .user-avatar { width: 55px; height: 55px; border-radius: 50%; border: 4px solid var(--card-bg); position: relative; z-index: 2; margin-top: 15px; }
         
-        /* زر تسجيل الخروج الفخم */
         .logout-btn {
             background: rgba(240, 71, 71, 0.1);
             color: #f04747;
@@ -139,7 +133,6 @@
         .active-voice-card { background: linear-gradient(135deg, rgba(88,101,242,0.1), rgba(235,69,158,0.05)); border-radius: 12px; padding: 15px; border: 1px solid rgba(88,101,242,0.2); display: none; }
         .live-timer { color: #43b581; font-weight: bold; }
         
-        /* منطقة المحتوى الوسطى */
         .content-area { 
             flex: 1; 
             padding: 25px; 
@@ -159,7 +152,6 @@
         .seeker-bar { flex: 1; -webkit-appearance: none; height: 5px; border-radius: 3px; background: #4f545c; outline: none; }
         .seeker-bar::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-color); cursor: pointer; }
         
-        /* تحسين مظهر أزرار التفاعل والتحكم */
         .meta-actions-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.05); }
         .like-dislike-group { display: flex; gap: 8px; }
         
@@ -183,7 +175,6 @@
         .thumb-img-holder img { width: 100%; height: 100%; object-fit: cover; }
         .duration-badge { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); padding: 2px 6px; font-size: 10px; border-radius: 4px; }
 
-        /* 🔥 الميديا كويري السحرية لمنع التداخل على الشاشات الصغيرة والموبايل */
         @media (max-width: 768px) {
             .main-layout { flex-direction: column; }
             .info-sidebar { width: calc(100% - 40px); order: 2; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -215,17 +206,17 @@
             <div class="user-profile-card">
                 <div class="user-banner"></div>
                 <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="user-avatar" id="userAvatarImg">
-                <h4 style="margin: 8px 0 2px 0; position:relative; z-index:2;" id="userGlobalName">Malek Dev</h4>
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); position:relative; z-index:2;" id="userUsernameTag">@orb_user</p>
-                <p style="margin: 8px 0; font-size: 11px; opacity: 0.4;" id="userIdTxt">ID: 443322110055</p>
-                <div style="font-size: 12px; font-weight:600; color: var(--accent-color);" id="serverCountTxt">Servers: 0 Servers</div>
+                <h4 style="margin: 8px 0 2px 0; position:relative; z-index:2;" id="userGlobalName">Loading...</h4>
+                <p style="margin: 0; font-size: 13px; color: var(--text-muted); position:relative; z-index:2;" id="userUsernameTag">@username</p>
+                <p style="margin: 8px 0; font-size: 11px; opacity: 0.4;" id="userIdTxt">ID: ----</p>
+                <div style="font-size: 12px; font-weight:600; color: var(--accent-color);" id="serverCountTxt">Servers: 0</div>
                 
                 <button class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
             </div>
 
             <div class="active-voice-card animate__animated animate__fadeIn" id="voiceCard">
                 <h4 style="margin: 0 0 10px 0; color: var(--accent-color);"><i class="fa-solid fa-tower-broadcast"></i> Voice Session</h4>
-                <div style="font-size: 13px; margin-bottom: 5px;">Room: <span style="font-weight:600;" id="activeVoiceRoomName">Searching Room...</span></div>
+                <div style="font-size: 13px; margin-bottom: 5px;">Room: <span style="font-weight:600;" id="activeVoiceRoomName">Searching...</span></div>
                 <div style="font-size: 13px; margin-bottom: 12px;">Runtime: <span class="live-timer">00:00:00</span></div>
             </div>
         </div>
@@ -233,7 +224,7 @@
         <div class="content-area">
             <div class="player-view-container animate__animated animate__zoomIn" id="playerContainer">
                 <div class="video-canvas" id="videoCanvas" ondblclick="triggerCanvasDoubleTap(event)">
-                    <iframe id="videoStreamFrame" src="" allow="autoplay"></iframe>
+                    <iframe id="videoStreamFrame" src="" allow="autoplay" enablejsapi="1"></iframe>
                     <div class="ripple-indicator" id="rippleLeft" style="left: 40px;"><i class="fa-solid fa-backward"></i> -10s</div>
                     <div class="ripple-indicator" id="rippleRight" style="right: 40px;"><i class="fa-solid fa-forward"></i> +10s</div>
                 </div>
@@ -265,9 +256,9 @@
             <div class="limit-tracker-box" id="limitTrackerPanel">
                 <div style="display:flex; justify-content:space-between; font-size:13px;">
                     <span><i class="fa-solid fa-hourglass-half"></i> Daily Usage Quota</span>
-                    <span id="quotaTextLabel">4.5 / 10 Hours</span>
+                    <span id="quotaTextLabel">0 / 10 Hours</span>
                 </div>
-                <div class="progress-rail"><div class="progress-fill" id="quotaProgressFill" style="width: 45%;"></div></div>
+                <div class="progress-rail"><div class="progress-fill" id="quotaProgressFill" style="width: 0%;"></div></div>
             </div>
 
             <h3 style="align-self: flex-start; width:100%; max-width:720px; margin: 10px 0 0 0;">Trending Tracks</h3>
@@ -284,8 +275,7 @@
         let currentSelectedGuildId = null;
         let targetVoiceChannelId = null;
 
-        // 🛡️ ضع هنا الـ IDs الخاصة بالسيرفرات المستثناة من الليميت (No Limit)
-        const noLimitGuilds = ["123456789012345678", "987654321098765432"]; 
+        const noLimitGuilds = ["123456789012345678"]; 
 
         const songsDatabase = [
             { title: "Tamer Hosny - El Hafla", author: "Tamer Hosny", id: "g276Z7a9c8M", dur: "03:45" },
@@ -311,6 +301,7 @@
 
             fetchUserProfileData(accessToken);
             renderServerGuildIcons(accessToken);
+            hydrateRecommendedTracks();
         }
 
         async function fetchUserProfileData(token) {
@@ -337,21 +328,21 @@
 
         document.getElementById('searchInp').addEventListener('keypress', function(ev) {
             if (ev.key === 'Enter') {
-                let textValue = this.value.toLowerCase();
-                let isViolated = forbiddenWordsList.some(badWord => textValue.includes(badWord));
+                let textValue = this.value.trim();
+                if(!textValue) return;
+
+                let isViolated = forbiddenWordsList.some(badWord => textValue.toLowerCase().includes(badWord));
                 if (isViolated) {
                     alert("Forbidden Content! Protocol violation.");
                     handleLogout();
                     return;
                 }
                 
-                // البحث في القائمة المحلية وتشغيلها في البوت وفي الموقع
-                const filtered = songsDatabase.filter(s => s.title.toLowerCase().includes(textValue) || s.author.toLowerCase().includes(textValue));
+                const filtered = songsDatabase.filter(s => s.title.toLowerCase().includes(textValue.toLowerCase()));
                 if(filtered.length > 0) {
                     playTrack(filtered[0].title, filtered[0].author, filtered[0].id);
                 } else {
-                    // لو ملهاش مثيل محلي، ابحث في يوتيوب علطول برقم الطلب
-                    playTrack(this.value, "YouTube Stream", "");
+                    playTrack(textValue, "YouTube Search Result", "dQw4w9WgXcQ"); 
                 }
                 document.getElementById('suggestionsBox').style.display = 'none';
             }
@@ -362,9 +353,11 @@
             document.getElementById('playerContainer').style.display = 'block';
             document.getElementById('currentTrackTitle').innerText = title;
             document.getElementById('currentTrackAuthor').innerText = author;
-            updateIframeSrc();
+            
+            const muteParam = isMuted ? "&mute=1" : "&mute=0";
+            document.getElementById('videoStreamFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&controls=0&enablejsapi=1${muteParam}`;
 
-            if(!currentSelectedGuildId || !targetVoiceChannelId) return;
+            if(!currentSelectedGuildId) return;
 
             try {
                 await fetch('http://localhost:3000/api/player/play', {
@@ -372,11 +365,11 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         guildId: currentSelectedGuildId,
-                        voiceChannelId: targetVoiceChannelId,
-                        query: id ? `https://www.youtube.com/watch?v=${id}` : title
+                        voiceChannelId: targetVoiceChannelId || "1122334455667788",
+                        query: title
                     })
                 });
-            } catch (err) { console.error("Bot Play API Error:", err); }
+            } catch (err) { console.error("Bot Play Error:", err); }
         }
 
         async function fireControlEvent(action) {
@@ -384,6 +377,7 @@
             try {
                 if(action === 'stop') {
                     document.getElementById('playerContainer').style.display = 'none';
+                    document.getElementById('videoStreamFrame').src = "";
                     await fetch('http://localhost:3000/api/player/stop', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -407,8 +401,7 @@
             const box = document.getElementById('suggestionsBox');
             if(val.length < 2) { box.style.display = 'none'; return; }
             box.innerHTML = `
-                <div class="suggestion-item" onclick="selectSearchSuggestion('${val} official')"><i class="fa-solid fa-magnifying-glass"></i> ${val} official song</div>
-                <div class="suggestion-item" onclick="selectSearchSuggestion('${val} remix')"><i class="fa-solid fa-magnifying-glass"></i> ${val} remix</div>
+                <div class="suggestion-item" onclick="selectSearchSuggestion('${val}')"><i class="fa-solid fa-magnifying-glass"></i> Play "${val}"</div>
             `;
             box.style.display = 'block';
         }
@@ -416,6 +409,7 @@
         function selectSearchSuggestion(phrase) {
             document.getElementById('searchInp').value = phrase;
             document.getElementById('suggestionsBox').style.display = 'none';
+            playTrack(phrase, "Instant Play", "dQw4w9WgXcQ");
         }
 
         function toggleTheme() {
@@ -433,21 +427,39 @@
                     body: JSON.stringify({ token: token })
                 });
                 const data = await response.json();
-                if(data.guilds) {
-                    sidebar.innerHTML = "";
-                    document.getElementById('serverCountTxt').innerText = `Servers: ${data.guilds.length} Servers`;
-                    data.guilds.forEach(g => {
-                        const short = g.name.substring(0,2).toUpperCase();
-                        sidebar.innerHTML += `
-                            <div class="guild-icon" title="${g.name}" onclick="switchActiveGuildChannelContext('${g.id}', '${g.name}')">
-                                ${g.icon ? `<img src="${g.icon}" style="width:100%;height:100%;border-radius:50%;">` : short}
-                            </div>
-                        `;
-                    });
+                if(data.guilds && data.guilds.length > 0) {
+                    buildGuildsUI(data.guilds);
+                    return;
                 }
-            } catch(e) {
+            } catch(e) { console.log("Bot server route fallback activated."); }
+
+            try {
+                const res = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const guilds = await res.json();
+                if(Array.isArray(guilds)) {
+                    const managedGuilds = guilds.filter(g => (g.permissions & 0x8) === 0x8 || g.owner);
+                    buildGuildsUI(managedGuilds);
+                }
+            } catch(err) {
                 sidebar.innerHTML = `<div class="guild-icon" onclick="switchActiveGuildChannelContext('101', 'Orb Dev Server')">OS</div>`;
             }
+        }
+
+        function buildGuildsUI(guildsList) {
+            const sidebar = document.getElementById('guildsSidebarRail');
+            sidebar.innerHTML = "";
+            document.getElementById('serverCountTxt').innerText = `Servers: ${guildsList.length}`;
+            guildsList.forEach(g => {
+                const short = g.name.substring(0,2).toUpperCase();
+                const iconUrl = g.icon ? `https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png` : null;
+                sidebar.innerHTML += `
+                    <div class="guild-icon" title="${g.name}" onclick="switchActiveGuildChannelContext('${g.id}', '${g.name}')">
+                        ${iconUrl ? `<img src="${iconUrl}" style="width:100%;height:100%;">` : short}
+                    </div>
+                `;
+            });
         }
 
         async function switchActiveGuildChannelContext(id, name) {
@@ -455,7 +467,6 @@
             document.getElementById('voiceCard').style.display = 'block';
             document.getElementById('limitTrackerPanel').style.display = 'block';
             
-            // 🛑 فحص الاستثناء من ليميت الـ 10 ساعات
             const quotaText = document.getElementById('quotaTextLabel');
             const progressFill = document.getElementById('quotaProgressFill');
             
@@ -469,15 +480,8 @@
                 progressFill.style.background = "linear-gradient(90deg, #43b581, #faa61a)";
             }
 
-            // 🔊 جلب أول روم صوتية تلقائياً من ديسكورد عبر البوت
-            document.getElementById('activeVoiceRoomName').innerText = "Fetching room...";
-            try {
-                // افتراضياً بنعين روم وهمية لو السيرفر محلي، أو البوت بيلقط الروم المتاحة
-                targetVoiceChannelId = "1122334455667788"; 
-                document.getElementById('activeVoiceRoomName').innerText = "🔊 General Voice";
-            } catch(err) { targetVoiceChannelId = null; }
-
-            hydrateRecommendedTracks();
+            document.getElementById('activeVoiceRoomName').innerText = "🔊 General Voice";
+            targetVoiceChannelId = "1122334455667788"; 
         }
 
         function hydrateRecommendedTracks() {
@@ -496,20 +500,17 @@
         function toggleMuteState() {
             isMuted = !isMuted;
             const volBtn = document.getElementById('volumeBtn');
+            const iframe = document.getElementById('videoStreamFrame');
+
             if(isMuted) {
                 volBtn.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
                 volBtn.style.color = "#f04747";
+                iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
             } else {
                 volBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
                 volBtn.style.color = "var(--text-color)";
+                iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
             }
-            updateIframeSrc();
-        }
-
-        function updateIframeSrc() {
-            if(!currentVideoId) return;
-            const muteParam = isMuted ? "&mute=1" : "&mute=0";
-            document.getElementById('videoStreamFrame').src = `https://www.youtube.com/embed/${currentVideoId}?autoplay=1&controls=0${muteParam}`;
         }
 
         function triggerCanvasDoubleTap(e) {
@@ -518,28 +519,6 @@
                 document.getElementById('rippleRight').style.opacity = 1; setTimeout(() => document.getElementById('rippleRight').style.opacity = 0, 400);
             } else {
                 document.getElementById('rippleLeft').style.opacity = 1; setTimeout(() => document.getElementById('rippleLeft').style.opacity = 0, 400);
-            }
-        }
-        
-        // 🔄 ميزة إزالة التفاعل وعمل المفتاح التبادلي التام (Toggle Like/Dislike)
-        function toggleReaction(type) {
-            const likeBtn = document.getElementById('btnLike');
-            const dislikeBtn = document.getElementById('btnDislike');
-            
-            if(type === 'like') {
-                if(likeBtn.classList.contains('active')) {
-                    likeBtn.classList.remove('active'); // إزالة اللايك لو موجودة
-                } else {
-                    likeBtn.classList.add('active');
-                    dislikeBtn.classList.remove('active'); // إزالة الديسلايك تلقائياً
-                }
-            } else {
-                if(dislikeBtn.classList.contains('active')) {
-                    dislikeBtn.classList.remove('active'); // إزالة الديسلايك لو موجودة
-                } else {
-                    dislikeBtn.classList.add('active');
-                    likeBtn.classList.remove('active'); // إزالة اللايك تلقائياً
-                }
             }
         }
     </script>
